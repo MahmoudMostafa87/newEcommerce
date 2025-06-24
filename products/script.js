@@ -51,3 +51,48 @@ if (window.location.pathname.includes("product.html")) {
       console.error(err);
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const dropdownBtn = document.getElementById("dropdown-toggle");
+  const dropdownMenu = document.getElementById("dropdown-menu");
+
+  dropdownBtn.addEventListener("click", function (e) {
+    e.stopPropagation(); // منع إغلاق القائمة فورًا
+    dropdownMenu.classList.toggle("hidden");
+  });
+
+  // إغلاق القائمة لو المستخدم ضغط خارجها
+  document.addEventListener("click", function () {
+    dropdownMenu.classList.add("hidden");
+  });
+});
+document.addEventListener("DOMContentLoaded", function () {
+  const cartButtons = document.querySelectorAll(".add-to-cart");
+
+  cartButtons.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const product = {
+        id: this.dataset.id,
+        name: this.dataset.name,
+        price: this.dataset.price,
+        image: this.dataset.image,
+        quantity: 1,
+      };
+
+      let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+      // Check if item already exists
+      const existing = cartItems.find((item) => item.id === product.id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cartItems.push(product);
+      }
+
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+      // انتقل لصفحة السلة
+      window.location.href = "../cart.html";
+    });
+  });
+});

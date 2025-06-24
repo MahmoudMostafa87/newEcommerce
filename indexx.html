@@ -43,11 +43,17 @@
               >الرئيسية</a
             >
 
-            <!-- 🔽 Dropdown -->
-            <div class="relative group">
-              <button class="hover:text-blue-600 font-bold">المنتجات</button>
+            <!-- 🔽 Dropdown بالضغط -->
+            <div class="relative">
+              <button
+                id="dropdown-toggle"
+                class="hover:text-blue-600 font-bold"
+              >
+                المنتجات
+              </button>
               <div
-                class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-md rounded-md hidden group-hover:block z-50"
+                id="dropdown-menu"
+                class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-md rounded-md hidden z-50"
               >
                 <ul class="text-sm text-right p-2 space-y-1">
                   <li>
@@ -131,10 +137,10 @@
               </div>
             </div>
 
-            <a href="#promote" class="hover:text-blue-600 font-bold"
+            <a href="show-products.html" class="hover:text-blue-600 font-bold"
               >اعرض منتجاتك معنا</a
             >
-            <a href="#blog" class="hover:text-blue-600 font-bold">المدونة</a>
+            <!-- <a href="#blog" class="hover:text-blue-600 font-bold">المدونة</a> -->
           </nav>
         </div>
 
@@ -179,7 +185,7 @@
           </p>
           <br />
           <a
-            href="#products"
+            href="#product"
             class="inline-block bg-red-600 hover:bg-red-700 px-9 py-3 rounded text-white font-semibold transition"
           >
             تسوق الآن
@@ -221,7 +227,7 @@
     </section>
 
     <!-- Featured Products Section -->
-    <section class="py-20">
+    <section class="py-20" id="product">
       <div class="container mx-auto px-4">
         <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">
           منتجات مميزة
@@ -235,7 +241,7 @@
               class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white"
             >
               <img
-                src="./images/child.png"
+                src="images//6eb56843001339c8f07a5911bb3e6d4311111.jpg"
                 alt="child icon"
                 class="w-full h-full object-cover"
               />
@@ -266,7 +272,7 @@
               class="h-48 bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white"
             >
               <img
-                src="./images/laptop-code.png"
+                src="images/91dda9318c2c3abe125dafd5f2648108222222.png"
                 alt="laptop code icon"
                 class="w-full h-full object-cover"
               />
@@ -297,7 +303,7 @@
               class="h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white"
             >
               <img
-                src="./images/heart.png"
+                src="images/fad66584b69ef6e9c98947d388ca448b3333333.png"
                 alt="heart icon"
                 class="w-full h-full object-cover"
               />
@@ -328,7 +334,7 @@
               class="h-48 bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center text-white"
             >
               <img
-                src="./images/user-graduate.png"
+                src="images/70ce67c00db25d8089584a180bd304c8444444.png"
                 alt="user graduate icon"
                 class="w-full h-full object-cover"
               />
@@ -368,7 +374,7 @@
               class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white"
             >
               <img
-                src="./images"
+                src="images/50fc6548f38a873c402c2aebd91aee4e5555555.png"
                 alt="child icon"
                 class="w-full h-full object-cover"
               />
@@ -399,7 +405,7 @@
               class="h-48 bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white"
             >
               <img
-                src="./images/laptop-code.png"
+                src="images/0a738f9209576d66fa0327ad03d6a55b666666.png"
                 alt="laptop code icon"
                 class="w-full h-full object-cover"
               />
@@ -430,7 +436,7 @@
               class="h-48 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white"
             >
               <img
-                src="./images/heart.png"
+                src="images/644ad835f403eecc794551bc05f354047777777.png"
                 alt="heart icon"
                 class="w-full h-full object-cover"
               />
@@ -461,7 +467,7 @@
               class="h-48 bg-gradient-to-br from-purple-400 to-indigo-500 flex items-center justify-center text-white"
             >
               <img
-                src="./images/user-graduate.png"
+                src="images/4b349229f3032062ff3bdfd4846b9b918888888.jpg"
                 alt="user graduate icon"
                 class="w-full h-full object-cover"
               />
@@ -502,7 +508,7 @@
             >
               <!-- <i class="fas fa-calendar-alt text-4xl"></i> -->
               <img
-                src="./images"
+                src="images/644ad835f403eecc794551bc05f3540499999999.png"
                 alt="child icon"
                 class="w-full h-full object-cover"
               />
@@ -533,7 +539,7 @@
             >
               <!-- <i class="fas fa-book text-4xl"></i> -->
               <img
-                src="./images"
+                src="images/2e84e02259ef94d13e5eb73e755a9ce51010101010.jpg"
                 alt="child icon"
                 class="w-full h-full object-cover"
               />
@@ -563,7 +569,7 @@
             >
               <!-- <i class="fas fa-question-circle text-4xl"></i> -->
               <img
-                src="./images"
+                src="images/ad1a2969c21d5fe1790822408cd0381a11.11.11.11.png"
                 alt="child icon"
                 class="w-full h-full object-cover"
               />
@@ -594,7 +600,7 @@
             >
               <!-- <i class="fas fa-coins text-4xl"></i> -->
               <img
-                src="./images"
+                src="images/e41c1245f8dd6da780cbb351d1aaa9e712.12.12.12.png"
                 alt="child icon"
                 class="w-full h-full object-cover"
               />

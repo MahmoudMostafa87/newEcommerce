@@ -75,16 +75,22 @@
               >الرئيسية</a
             >
 
-            <!-- 🔽 Dropdown -->
-            <div class="relative group">
-              <button class="hover:text-blue-600 font-bold">المنتجات</button>
+            <!-- 🔽 Dropdown بالضغط -->
+            <div class="relative">
+              <button
+                id="dropdown-toggle"
+                class="hover:text-blue-600 font-bold"
+              >
+                المنتجات
+              </button>
               <div
-                class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-md rounded-md hidden group-hover:block z-50"
+                id="dropdown-menu"
+                class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-md rounded-md hidden z-50"
               >
                 <ul class="text-sm text-right p-2 space-y-1">
                   <li>
                     <a
-                      href="#"
+                      href="products/index.html"
                       class="block px-3 py-1 hover:bg-gray-100 rounded"
                       >تجارة وأعمال</a
                     >
@@ -163,10 +169,10 @@
               </div>
             </div>
 
-            <a href="#promote" class="hover:text-blue-600 font-bold"
+            <a href="show-products.html" class="hover:text-blue-600 font-bold"
               >اعرض منتجاتك معنا</a
             >
-            <a href="#blog" class="hover:text-blue-600 font-bold">المدونة</a>
+            <!-- <a href="#blog" class="hover:text-blue-600 font-bold">المدونة</a> -->
           </nav>
         </div>
 
@@ -455,5 +461,6 @@
     </div>
 
     <script src="script.js"></script>
+
   </body>
 </html>

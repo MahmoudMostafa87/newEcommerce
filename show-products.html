@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>منصة رقمي</title>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <link rel="stylesheet" href="styles/main.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="show.css" />
+  </head>
+  <body class="font-sans bg-white text-gray-900">
+    <!-- ✅ Navbar مُعدّل حسب طلبك -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div
+        class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center"
+      >
+        <!-- ✅ يمين: اللوجو + الروابط -->
+        <div class="flex items-center space-x-6 space-x-reverse">
+          <!-- 🔵 Logo -->
+          <h1 class="text-6xl font-bold text-blue-600">رقمي</h1>
+          <!-- 🔘 زر إظهار القائمة في الموبايل -->
+          <button
+            id="menu-toggle"
+            class="md:hidden text-2xl text-gray-800 ml-2"
+          >
+            ☰
+          </button>
+
+          <!-- 🔵 الروابط -->
+          <nav
+            id="main-nav"
+            class="hidden md:flex items-center space-x-4 space-x-reverse text-sm text-gray-800 relative flex-col md:flex-row bg-white md:bg-transparent absolute md:static top-20 right-4 md:right-0 border md:border-0 p-4 md:p-0 shadow-md md:shadow-none z-50 rounded-md md:rounded-none w-60 md:w-auto"
+          >
+            <a href="indexx.html" class="hover:text-blue-600 font-bold"
+              >الرئيسية</a
+            >
+
+            <!-- 🔽 Dropdown بالضغط -->
+            <div class="relative">
+              <button
+                id="dropdown-toggle"
+                class="hover:text-blue-600 font-bold"
+              >
+                المنتجات
+              </button>
+              <div
+                id="dropdown-menu"
+                class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-md rounded-md hidden z-50"
+              >
+                <ul class="text-sm text-right p-2 space-y-1">
+                  <li>
+                    <a
+                      href="products/index.html"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >تجارة وأعمال</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >روايات وقصص</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >تعليم وأطفال</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >اشتراكات</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >طبخ</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >ألعاب وترفيه</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >صحة ورياضة</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >خدمات</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >مجانية</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >قوالب</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="block px-3 py-1 hover:bg-gray-100 rounded"
+                      >رمضان</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <a href="show-products.html" class="hover:text-blue-600 font-bold"
+              >اعرض منتجاتك معنا</a
+            >
+            <!-- <a href="#blog" class="hover:text-blue-600 font-bold">المدونة</a> -->
+          </nav>
+        </div>
+
+        <!-- ✅ يسار: السلة + تسجيل الدخول -->
+        <div class="flex items-center space-x-4 space-x-reverse">
+          <a
+            href="cart.html"
+            class="text-gray-700 hover:text-blue-600 text-xl relative"
+          >
+            🛒<span
+              id="cart-count"
+              class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+              >0</span
+            >
+          </a>
+          <a
+            href="#"
+            id="login-link"
+            class="text-sm text-blue-600 hover:underline"
+          >
+            تسجيل الدخول
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <section class="relative bg-gray-100 py-16 overflow-hidden">
+      <!-- ✅ خلفية شفافة -->
+      <div class="absolute inset-0">
+        <img
+          src="images/banner1.png"
+          alt="خلفية"
+          class="w-full h-full object-cover opacity-40"
+        />
+      </div>
+
+      <!-- ✅ المحتوى -->
+      <div
+        class="relative z-10 container mx-auto px-6 flex flex-col-reverse md:flex-row items-center justify-between"
+      >
+        <!-- ✅ نص -->
+        <div class="text-center md:text-right md:max-w-xl space-y-12">
+          <p
+            class="inline-block bg-white px-4 py-1 text-sm rounded-full shadow font-semibold"
+          >
+            أرباح خرافية من بيع المنتجات الرقمية
+            <a href="#" class="text-blue-600 font-bold hover:underline"
+              >اقرأ المقال</a
+            >
+          </p>
+          <h1
+            class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight"
+          >
+            صُممت للمبدعين<br />والمُنتجين
+          </h1>
+          <p class="text-gray-600 text-xl">لبيع أي منتج رقمي</p>
+          <div class="flex justify-center md:justify-start gap-4 mt-6">
+            <a
+              href="#"
+              class="bg-blue-600 text-white px-6 py-3 rounded-md font-bold hover:bg-blue-700 transition"
+              >اشترك الآن</a
+            >
+            <a
+              href="#"
+              class="bg-white text-blue-600 border border-blue-600 px-6 py-3 rounded-md font-bold hover:bg-blue-50 transition"
+              >اعرف المزيد</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+    <br /><br /><br />
+
+    <center>
+      <p class="p1">
+        رقمي منصة متعددة القنوات تُمكن المبدعين والمنتجين من عرض وبيع منتجاتهم
+        الرقمية سواء كانت كتب الكترونية, دورات, قوالب, نماذج, استشارات او خدمات
+        ..
+      </p>
+    </center>
+
+    <section class="bg-gray-50 py-20">
+      <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- 🟦 كارت: سوق رقمي -->
+          <div class="bg-white rounded-xl shadow-md p-8 text-center">
+            <h3 class="text-2xl md:text-3xl font-bold mb-2 text-gray-900">
+              سوق رقمي
+            </h3>
+            <p class="text-gray-600 mb-6 text-lg">
+              متجر ضخم يضم مئات المنتجات الرقمية
+            </p>
+            <img
+              src="images/mp-model.png"
+              alt="سوق رقمي"
+              class="mx-auto w-40 md:w-52"
+            />
+          </div>
+
+          <!-- 🟦 كارت: متجر خاص -->
+          <div class="bg-white rounded-xl shadow-md p-8 text-center">
+            <h3 class="text-2xl md:text-3xl font-bold mb-2 text-gray-900">
+              متجر خاص
+            </h3>
+            <p class="text-gray-600 mb-6 text-lg">
+              متجر خاص بك لعرض منتجاتك فقط
+            </p>
+            <img
+              src="images/platform-model.png"
+              alt="متجر خاص"
+              class="mx-auto w-40 md:w-52"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-16">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <!-- Logo and Description -->
+          <div class="md:col-span-2">
+            <div
+              class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg font-bold text-xl inline-block mb-4"
+            >
+              رقمي
+            </div>
+            <p class="text-gray-300 mb-6">
+              رقمي هي المنصة العربية الاولى المتخصصة في الربط بين بائعين
+              المنتجات الرقمية والمشترين بحيث توفر تجربة عرض وبيع سهلة وآمنة
+            </p>
+            <div class="flex space-x-4 space-x-reverse">
+              <a
+                href="#"
+                class="bg-blue-600 p-2 rounded-full hover:bg-blue-700 transition-colors"
+              >
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a
+                href="#"
+                class="bg-blue-400 p-2 rounded-full hover:bg-blue-500 transition-colors"
+              >
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a
+                href="#"
+                class="bg-pink-600 p-2 rounded-full hover:bg-pink-700 transition-colors"
+              >
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a
+                href="#"
+                class="bg-red-600 p-2 rounded-full hover:bg-red-700 transition-colors"
+              >
+                <i class="fab fa-youtube"></i>
+              </a>
+              <a
+                href="#"
+                class="bg-blue-700 p-2 rounded-full hover:bg-blue-800 transition-colors"
+              >
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Help Links -->
+          <div>
+            <h3 class="font-bold text-lg mb-4">المساعدة</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >عن رقمي</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >بيع منتجاتك على رقمي</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >الشروط والأحكام</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >الخصوصية</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >الاسئلة الشائعة</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Seller Links -->
+          <div>
+            <h3 class="font-bold text-lg mb-4">البائعين</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >مدونة رقمي</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >دخول البائعين</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >التسجيل كـ بائع</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-700 mt-12 pt-8 text-center">
+          <p class="text-gray-400">
+            © 2024 جميع حقوق المنصة محفوظة وحقوق المنتجات محفوظة لملاكها
+          </p>
+        </div>
+      </div>
+    </footer>
+    <!-- Login Modal -->
+    <div
+      id="login-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold">تسجيل الدخول</h2>
+          <button
+            id="close-login-modal"
+            class="text-gray-500 hover:text-gray-700 text-2xl"
+          >
+            &times;
+          </button>
+        </div>
+
+        <p class="text-gray-600 mb-6 text-center">
+          مرحباً بعودتك، عند إدخال بريدك الإلكتروني ستصلك رسالة تحتوي على رابط
+          الدخول لحسابك
+        </p>
+
+        <form id="login-form">
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+              بريدك الإلكتروني *
+            </label>
+            <input
+              type="email"
+              id="login-email"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition"
+          >
+            إرسال رابط الدخول
+          </button>
+
+          <div class="text-center mt-4">
+            <a
+              href="#"
+              id="show-register"
+              class="text-blue-600 hover:underline text-sm"
+            >
+              للتسجيل اضغط هنا
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div
+      id="register-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold">تسجيل</h2>
+          <button
+            id="close-register-modal"
+            class="text-gray-500 hover:text-gray-700 text-2xl"
+          >
+            &times;
+          </button>
+        </div>
+
+        <p class="text-gray-600 mb-6 text-center">
+          سجل معنا الآن لشراء المنتجات بشكل أسهل
+        </p>
+
+        <form id="register-form">
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+              الاسم
+            </label>
+            <input
+              type="text"
+              id="register-name"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+              البريد الإلكتروني *
+            </label>
+            <input
+              type="email"
+              id="register-email"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition"
+          >
+            تسجيل
+          </button>
+
+          <div class="text-center mt-4">
+            <a
+              href="#"
+              id="show-login"
+              class="text-blue-600 hover:underline text-sm"
+            >
+              عندك حساب؟ سجل دخولك الآن
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

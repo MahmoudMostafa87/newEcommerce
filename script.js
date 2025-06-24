@@ -409,3 +409,18 @@ document.addEventListener("DOMContentLoaded", () => {
 // Make functions global for onclick handlers
 window.updateQuantity = updateQuantity;
 window.removeFromCart = removeFromCart;
+
+document.addEventListener("DOMContentLoaded", function () {
+  const dropdownBtn = document.getElementById("dropdown-toggle");
+  const dropdownMenu = document.getElementById("dropdown-menu");
+
+  dropdownBtn.addEventListener("click", function (e) {
+    e.stopPropagation(); // منع إغلاق القائمة فورًا
+    dropdownMenu.classList.toggle("hidden");
+  });
+
+  // إغلاق القائمة لو المستخدم ضغط خارجها
+  document.addEventListener("click", function () {
+    dropdownMenu.classList.add("hidden");
+  });
+});
