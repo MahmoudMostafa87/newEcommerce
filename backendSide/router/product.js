@@ -9,6 +9,7 @@ const {addProductController,
     deleteProductController,
     getAllProductsController,
     getProductController,
+    getMyProduct,
     updateProductController,
     updateThingInProductController,
     updateImageProduct
@@ -20,17 +21,22 @@ const {addProductController,
     
     
 router.route('/')
-    .post(auth, admin,upload.single("image"), catchError(addProductController))//done*
-    .get(catchError(getAllProductsController));//done*
+    .post(auth, admin,upload.single("image"), catchError(addProductController))
+    .get(catchError(getAllProductsController));
     
 
-router.route("/:id")
-    .get(catchError(getProductController))//done*
-    .put(auth,admin,upload.single("image"),catchError(updateProductController))//done*
-    .patch(auth,admin,catchError(updateThingInProductController))//done*
-    .delete(auth,admin, catchError(deleteProductController));//done*
 
-router.patch("/:id/update_image",auth,admin,upload.single("image"),catchError(updateImageProduct))//done*
+router.get("/myProduct",auth,catchError(getMyProduct));
+
+
+router.route("/:id")
+    .get(catchError(getProductController))
+    .put(auth,admin,upload.single("image"),catchError(updateProductController))
+    .patch(auth,admin,catchError(updateThingInProductController))
+    .delete(auth,admin, catchError(deleteProductController));
+
+router.patch("/:id/update_image",auth,admin,upload.single("image"),catchError(updateImageProduct))
+
 
 module.exports = router;
 

@@ -5,7 +5,8 @@ const deleteFile= require('../utils/deleteFile.js');
 const {productValidation,productUpdateThingValidation} = require('../utils/validation.js');
 
 
-
+//وانت بترف المنتج بيروح للadmin عشان يتوافق عليه وسعتها بيتم دة انشاء المنتج عادي
+// ممكن فى جدول زيادة نضيف فيه التأكيد او المنتج نعمل له حقل جديد بأنه تم التأكيد عليه ولا لا
 async function addProductController(req, res) {
     const { name, description, price, stock, Categoryname} = req.body;
 
@@ -21,9 +22,9 @@ async function addProductController(req, res) {
     const image_url=req.protocol+"://"+req.header("host")+"/"+req.file.path;
 
     [result] = await db.execute(`
-        INSERT INTO Product (name, description, price, stock, category_id, image_url)
-        VALUES (?, ?, ?, ?, ?, ?);
-    `, [name, description, price, stock, result[0].id, image_url]);
+        INSERT INTO Product (name, description, price, stock, category_id, image_url,user_id)
+        VALUES (?, ?, ?, ?, ?, ?,?);
+    `, [name, description, price, stock, result[0].id, image_url,req.user.id]);
 
     if (result.affectedRows === 0) return res.status(500).json({ message: code(500) });
 
@@ -76,8 +77,6 @@ if(search) {
 }
 
 
-
-
 async function getProductController(req, res) {
         const {id}=req.params;
         
@@ -89,9 +88,17 @@ async function getProductController(req, res) {
 }
 
 
+async function getMyProduct(req,res) {
+    const [result]=await db.query(`SELECT * FROM Product WHERE user_id=?`,[req.params.id])
+    
+    if(result.length===0)return res.status(404).json({message:"not found my product"});
+
+    res.status(200).json(result);
+}
+
 
 async function updateProductController(req, res) {    
-    const {name, description, price, stock, Categoryname } = req.body;
+        const { name, description, price, stock, Categoryname,rating,commission_rate } = req.body;
 
     const { error } = productValidation(req.body);
     if (error) return res.status(400).json({ message: code(400), error: error.details[0].message });
@@ -112,9 +119,18 @@ async function updateProductController(req, res) {
     const image_url=req.protocol+"://"+req.header("host")+"/"+req.file.path;
 
     [result] = await db.execute(`
-        UPDATE Product SET name=? , description=? ,  price = ? , stock= ? ,category_id = ?, image_url=?
+        UPDATE Product 
+        SET 
+        name=? , 
+        description=? ,  
+        price = ? , 
+        stock= ? ,
+        category_id = ?,
+         image_url=?,
+         rating=?,
+         commission_rate=?
         WHERE id=?;
-    `, [name, description, price, stock, result[0].id, image_url,+req.params.id]);
+    `, [name, description, price, stock, result[0].id, image_url,rating,commission_rate,+req.params.id]);
 
     if (result.affectedRows === 0) return res.status(500).json({ message: code(500) });
 
@@ -124,7 +140,7 @@ async function updateProductController(req, res) {
 
 
 async function updateThingInProductController(req,res){
-        const { name, description, price, stock, Categoryname } = req.body;
+        const { name, description, price, stock, Categoryname,rating,commission_rate } = req.body;
 
     const { error } = productUpdateThingValidation(req.body);
     if (error) return res.status(400).json({ message: code(400), error: error.details[0].message });
@@ -157,6 +173,12 @@ async function updateThingInProductController(req,res){
         else if(Categoryname){
             newFeild="category_id= ?";
             value=result[0].id;
+        }else if(rating){
+            newFeild="rating= ?";
+            value=rating;
+        }else if(commission_rate){
+            newFeild="commission_rate= ?";
+            value=commission_rate;
         }
 
         const QUERE=`UPDATE Product SET 
@@ -211,6 +233,7 @@ module.exports = {
     addProductController,
     getAllProductsController,
     getProductController,
+    getMyProduct,
     updateProductController,
     deleteProductController,
     updateThingInProductController,

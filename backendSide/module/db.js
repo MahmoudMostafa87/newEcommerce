@@ -26,6 +26,7 @@ const path=require("path");
     connectionLimit: 10,
     queueLimit: 0
   });
+
   const urldatabase=path.join(__dirname+"\\Ecommerce.sql")
   const sql=fs.readFileSync(urldatabase, 'utf8')
 

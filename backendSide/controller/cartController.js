@@ -4,7 +4,7 @@ const {validationConfirm}=require("../utils/validation");
 
 async function createCard(req,res){
         
-    let [result]=await db.query("SELECT * FROM Cart WHERE user_id=? AND state_card='pending' ",[req.user.id]);
+    let [result]=await db.query("SELECT * FROM Cart WHERE user_id=? ",[req.user.id]);
     if(result.length>=1)return res.status(400).json({message:"not can create card"});
     
     [result]=await db.query("INSERT INTO Cart(user_id) VALUES (?);",[req.user.id]);
@@ -17,7 +17,7 @@ async function createCard(req,res){
 }
 
 
-
+//كل مهنضيف عنصر فى الcart هنحسب الsum بتاع الcart_item ونضيفه فى الCart لان هو دة الtotal ألجديد
 async function addProductInCard(req,res) {
     let {quantity,productid}=req.body;
 
@@ -53,8 +53,8 @@ async function addProductInCard(req,res) {
 
     //get card_product have the same product id and card id
     //check if product id add it in  cart againe will mack product in cart add quantity only
-    //other wise will add new product in cart by cart_product table's 
-    [result] =await db.query(`SELECT * FROM Cart_Product WHERE product_id=? AND cart_id=?`,[productid,card.id]);
+    //other wise will add new product in cart by Cart_item table's 
+    [result] =await db.query(`SELECT * FROM Cart_item WHERE product_id=? AND cart_id=?`,[productid,card.id]);
 
     if(result.length===1){
     //will get product and update stock then update product in quantity
@@ -75,7 +75,7 @@ async function addProductInCard(req,res) {
         cartproduct_In_card.quantity+=quantity;
 
       await db.query(`
-        UPDATE Cart_Product 
+        UPDATE Cart_item 
         SET quantity=? 
         WHERE id=?`,[cartproduct_In_card.quantity,cartproduct_In_card.id]);
 
@@ -90,7 +90,7 @@ async function addProductInCard(req,res) {
         [result]=await db.query("UPDATE Product SET stock=? WHERE id = ?",[(product.stock-quantity),productid]);    
       
       //create product_item entity and add card id in here and product too and add in it quantity
-      [result]=await db.execute(`INSERT INTO Cart_Product(cart_id,product_id,quantity) VALUES (?,?,?)`,[card.id,product.id,quantity])
+      [result]=await db.execute(`INSERT INTO Cart_item(cart_id,product_id,quantity) VALUES (?,?,?)`,[card.id,product.id,quantity])
     }
 
 
@@ -98,52 +98,15 @@ async function addProductInCard(req,res) {
 };
 
 
-async function confirmCard(req,res){
-  const {country,postcode,address,phoneNumber,pick_up_time}=req.body;
-
-  const {error} =validationConfirm(req.body);
-  
-  if(error)return res.status(400).json({message:error.details[0].message})
-//AND state_card="pending"
-  let [result]=await db.query(`SELECT * FROM Cart WHERE user_id=? AND state_card="pending";`,[req.user.id]);
-  
-  if(result.length===0)return res.status(404).json({message:"not found this card"});
-  const card=result[0];
-  
-  [result]=await db.query(`SELECT SUM(Product.price*Cart_Product.quantity) AS TotalPrice FROM Product 
-    JOIN Cart_Product ON Cart_Product.product_id=Product.id
-    JOIN Cart ON Cart.id=Cart_Product.cart_id
-    AND Cart.user_id=?
-    `,[req.user.id]);
-
-  
-  
-  await db.query(`INSERT INTO  Orders(
-    totalPrice,
-    phoneNumber,
-    address,
-    postcode,
-    country,
-    pick_up_time,
-    user_id) VALUES (?,?,?,?,?,?,?) `,[result[0].TotalPrice,phoneNumber,address,postcode,country,pick_up_time,req.user.id]);
-    
-    await db.query(`DELETE FROM Cart_product WHERE cart_id=?;
-      UPDATE Cart SET state_card="completed" WHERE user_id= ?;
-      `,[card.id,req.user.id]);
-
-
-  res.status(200).json({message:"done create order"});
-  };
-
 
 async function getProductsInCard(req,res){
 
 //will return server internal error because system database
   const [result]=await db.query(`
-    SELECT Product.name,Product.price,Product.image_url,Cart_Product.quantity
-    FROM Cart_Product
-    JOIN Cart ON Cart.id=Cart_Product.cart_id
-    JOIN Product ON Product.id=Cart_Product.product_id
+    SELECT Product.name,Product.price,Product.image_url,Cart_item.quantity
+    FROM Cart_item
+    JOIN Cart ON Cart.id=Cart_item.cart_id
+    JOIN Product ON Product.id=Cart_item.product_id
     WHERE Cart.user_id=?
     `,[req.user.id]);
 
@@ -167,7 +130,7 @@ async function updatequantity(req,res){
     if(error)return res.status(400).json({message:error.details[0].message});
 
   let [result]=await db.query(`
-    SELECT * FROM Cart_product
+    SELECT * FROM Cart_item
     WHERE product_id=?;
     
     SELECT * FROM Product
@@ -188,7 +151,7 @@ async function updatequantity(req,res){
 
     //no chang
     [result]=await db.query(`
-      UPDATE Cart_product
+      UPDATE Cart_item
       SET quantity=?
       WHERE product_id=?;
 
@@ -199,8 +162,8 @@ async function updatequantity(req,res){
     `,[quantity,productid,stock,productid]);
       
     [result]=await db.query(`
-      SELECT Product.stock,Cart_product.quantity FROM Cart_product 
-      JOIN Product ON Product.id=Cart_product.product_id
+      SELECT Product.stock,Cart_item.quantity FROM Cart_item 
+      JOIN Product ON Product.id=Cart_item.product_id
       and Product.id=?`,[productid]);
     
       res.status(200).json({message:"done updated"});
@@ -209,7 +172,7 @@ async function updatequantity(req,res){
 async function deleteProductFromCard(req,res){
  const {productid}=req.body;
 
- let [result]=await db.query(`SELECT * FROM Cart_product
+ let [result]=await db.query(`SELECT * FROM Cart_item
   WHERE product_id=?;
   `,[productid]);
 
@@ -223,7 +186,7 @@ async function deleteProductFromCard(req,res){
    
     await db.execute(`UPDATE Product SET stock=? WHERE id=?`,[(productCard.quantity+result[0].stock),productid]);
    
-    await db.execute("DELETE FROM Cart_product WHERE product_id=?",[productid]);
+    await db.execute("DELETE FROM Cart_item WHERE product_id=?",[productid]);
 
     res.status(200).json({message:"delete this item is sucessfuly"});
 };
@@ -231,10 +194,11 @@ async function deleteProductFromCard(req,res){
 
 
 module.exports = {
-  confirmCard,
   addProductInCard,
   createCard,
   deleteProductFromCard,
   getProductsInCard,
   updatequantity
 };
+
+

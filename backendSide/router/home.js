@@ -7,9 +7,9 @@ const {SignIN,
 const catchError= require("../utils/catchError");
 
 
-router.get("/",catchError(getProduct));//done*
-router.post("/signin",catchError(SignIN));//done
-router.post("/signup",catchError(SignUp));//done*
+router.get("/",catchError(getProduct));
+router.post("/signin",catchError(SignIN));
+router.post("/signup",catchError(SignUp));
 
 
 

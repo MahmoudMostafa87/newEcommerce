@@ -65,11 +65,7 @@ async function deleteCategory(req, res) {
         WHERE category_id=?`,[rows[0].id]);
     
     if (result.length !== 0) return res.status(409).json({ error: 'this cagtegory have products not can delete it'});
-        
-    [result]=db.query(`SELECT * FROM Blogs
-        WHERE category_id=?`,[rows[0].id]);
-    if (result.length !== 0) return res.status(409).json({ error: 'this cagtegory have blogs not can delete it'});
-        
+    
     [result] = await db.query('DELETE FROM Category WHERE id = ?', [req.params.id]);
     if (result.affectedRows === 0) return res.status(404).json({ error: 'Category not found' });
         

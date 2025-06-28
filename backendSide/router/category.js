@@ -17,16 +17,15 @@ const {
 router.param('id', validateId);
 
 router.route('/')
-.post(auth, admin, catchError(createCategory))//done*
-.get(catchError(getAllCategories));//done*
+.post(auth, admin, catchError(createCategory))
+.get(catchError(getAllCategories));
 
-router.get("/:id/products",catchError(getProductsFromSpcificCategory));//done*
+router.get("/:id/products",catchError(getProductsFromSpcificCategory));
 
 router.route("/:id")
-    .get(catchError(getCategoryById))//done*
-    .put(auth,admin,catchError(updateCategory))//done*
-    .delete(auth,admin, catchError(deleteCategory));//done*
-//delete after add product but add when delete category must delete it when product is empty
+    .get(catchError(getCategoryById))
+    .put(auth,admin,catchError(updateCategory))
+    .delete(auth,admin, catchError(deleteCategory));
     
 
 
