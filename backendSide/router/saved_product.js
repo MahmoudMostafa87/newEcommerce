@@ -17,10 +17,10 @@ router.param("id",validationId);
 router.use(auth);
 
 router.route("/")
-.post(catchError(savedProduct))
-.get(catchError(getProductSaved));
+.post(catchError(savedProduct))//*
+.get(catchError(getProductSaved));//*
 
-router.delete('/:id',catchError(deleteProductSaved))
+router.delete('/:id',catchError(deleteProductSaved))//*
 
 
 //the endpoint in product or spcific product on any page

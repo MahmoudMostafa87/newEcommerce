@@ -7,10 +7,10 @@ const {SignIN,
 const catchError= require("../utils/catchError");
 
 
-router.get("/",catchError(getProduct));
-router.post("/signin",catchError(SignIN));
-router.post("/signup",catchError(SignUp));
-
+router.get("/",catchError(getProduct));//*
+router.post("/signin",catchError(SignIN));//*
+router.post("/signup",catchError(SignUp));//*
+// router.post("/varify",catchError());
 
 
 module.exports=router;

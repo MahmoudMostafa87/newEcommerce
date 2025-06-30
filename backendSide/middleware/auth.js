@@ -8,7 +8,6 @@ const status=require("../utils/statuscode")
 module.exports=async(req,res,next)=>{
     const token=req.header("Authorization").split(" ")[1];
     if(!token)return res.status(400).json({message:"some thing error in token",error:status(400)});
-
     try{
         const decode=jwt.verify(token,process.env.JWT_SECRET);
         if(!decode)return res.status(403).send(status(403));

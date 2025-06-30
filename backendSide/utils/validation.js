@@ -61,7 +61,7 @@ exports.productValidation=(body)=>{
         description:joi.string().min(10).max(500).required().trim(),
         price:joi.number().min(20).max(60000).required(),
         stock:joi.number().min(0).max(1000).required(),
-        Categoryname:joi.string().min(5).max(100).required(),
+        Categoryname:joi.string().min(3).max(100).required(),
         rating:joi.number().max(10).min(0).optional(),
         commission_rate:joi.number().max(20).min(0).optional(),
         image_url:joi.string().uri().optional()

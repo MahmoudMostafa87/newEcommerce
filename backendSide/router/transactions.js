@@ -3,23 +3,34 @@ const auth=require("../middleware/auth");
 const admin=require("../middleware/admin");
 const validationId=require("../middleware/validationId");
 const catchError=require("../utils/catchError");
-
+const {
+    captureOrder,
+    createOrder,
+    getAllTransactions,
+    getMyTransactions,
+    getSpcificTransaction,
+    withdraw
+}=require("../controller/transactionsController");
 
 router.param("id",validationId);
 
-
 router.use(auth);
 
+
+router.get("/",admin,catchError(getAllTransactions));
+router.get("/my-transaction",catchError(getMyTransactions));
+router.post("/create-order",catchError(createOrder));
+router.post("/capture-order",catchError(captureOrder));
+
+router.post("/withdraw",catchError(withdraw));
+router.get("/:id",catchError(getSpcificTransaction));
+
 // router.get("/myTransactions",catchError(getMyTransactions));
-//GET get my Transactions +
+//GET get my Transactions 
 //admin GET all Transactions 
 //GET spcific Transactions 
-
-
-// router.post('/confirm',catchError(confirmCard));
 // router.post("/create-order") send id order
 // router.post("/capture-order") return id order
-
 
 
 module.exports=router;

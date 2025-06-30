@@ -13,12 +13,18 @@ async function addProductController(req, res) {
     const { error } = productValidation(req.body);
     if (error) return res.status(400).json({ message: code(400), error: error.details[0].message });
 
-    let [result]=await db.execute(`
+
+    let [result]=await db.query(`SELECT * FROM Product WHERE name=?`,[name]);
+    if(result.length)return res.status(400).send("this name already exist");
+
+
+    [result]=await db.execute(`
         SELECT * FROM Category WHERE name = ?;
     `, [Categoryname]);
 
     if(result.length === 0) return res.status(404).json({ message: code(404) });
 
+    if(!req.file)return res.status(400).send("please send image profile");
     const image_url=req.protocol+"://"+req.header("host")+"/"+req.file.path;
 
     [result] = await db.execute(`
@@ -57,9 +63,10 @@ if(search) {
   [result]=await db.query(`
     SELECT * FROM Product
     WHERE category_id=?
+    AND price BETWEEN ? AND ?
     ORDER BY price ${sort}
     LIMIT ? OFFSET ?;
-    `,[categoryId,+pagesize,limit]);
+    `,[categoryId,minprice,maxprice,+pagesize,limit]);
 } else {
     [result]=await db.query(`
     SELECT * FROM Product
@@ -84,12 +91,12 @@ async function getProductController(req, res) {
 
         if(result.length===0)return res.status(404).json({message:"not found this product"})
 
-        return res.status(200).json({product:result[0]});
+        return res.status(200).json(result[0]);
 }
 
 
 async function getMyProduct(req,res) {
-    const [result]=await db.query(`SELECT * FROM Product WHERE user_id=?`,[req.params.id])
+    const [result]=await db.query(`SELECT * FROM Product WHERE user_id=?`,[req.user.id])
     
     if(result.length===0)return res.status(404).json({message:"not found my product"});
 
@@ -103,20 +110,24 @@ async function updateProductController(req, res) {
     const { error } = productValidation(req.body);
     if (error) return res.status(400).json({ message: code(400), error: error.details[0].message });
 
-    let [result]=await db.execute(`
+    let [category]=await db.execute(`
         SELECT * FROM Category WHERE name = ?;
     `, [Categoryname]);
 
-    if(result.length === 0) return res.status(404).json({ message: code(404) });
+    if(category.length === 0) return res.status(404).json({ message: code(404) });
     
     [result]=await db.execute(`
         SELECT * FROM Product WHERE id=?`,[req.params.id]);
         
     if(result.length === 0) return res.status(404).json({ message: code(404) });
-    
-    deleteFile(result[0].image_url.split("\\")[1]);
 
+    const [productsHaveTheSameName]=await db.query(`SELECT * FROM Product WHERE name=?`,[name]);
+    if(productsHaveTheSameName.length!==0)return res.status(400).send("this name product already exist");
+
+    if(!req.file)return res.status(400).send("upload image");
+    deleteFile(result[0].image_url.split("\\")[1]);
     const image_url=req.protocol+"://"+req.header("host")+"/"+req.file.path;
+
 
     [result] = await db.execute(`
         UPDATE Product 
@@ -126,11 +137,11 @@ async function updateProductController(req, res) {
         price = ? , 
         stock= ? ,
         category_id = ?,
-         image_url=?,
-         rating=?,
-         commission_rate=?
+        image_url=?,
+        rating=?,
+        commission_rate=?
         WHERE id=?;
-    `, [name, description, price, stock, result[0].id, image_url,rating,commission_rate,+req.params.id]);
+    `, [name, description, price, stock, category[0].id, image_url,rating,commission_rate,+req.params.id]);
 
     if (result.affectedRows === 0) return res.status(500).json({ message: code(500) });
 
@@ -158,6 +169,8 @@ async function updateThingInProductController(req,res){
     }
 
         if(name){
+                const [result]=await db.query("SELECT * FROM Product WHERE name=?",[name]);
+                if(result.length)return res.status(400).send("this product is here");
                 newFeild="name= ?";
                 value=name;
         }else if (description){

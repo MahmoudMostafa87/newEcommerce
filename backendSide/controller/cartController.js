@@ -1,11 +1,10 @@
 const db=require("../module/db");
 const joi=require("joi");
-const {validationConfirm}=require("../utils/validation");
 
 async function createCard(req,res){
         
     let [result]=await db.query("SELECT * FROM Cart WHERE user_id=? ",[req.user.id]);
-    if(result.length>=1)return res.status(400).json({message:"not can create card"});
+    if(result.length)return res.status(400).json({message:"not can create card"});
     
     [result]=await db.query("INSERT INTO Cart(user_id) VALUES (?);",[req.user.id]);
     
@@ -29,7 +28,7 @@ async function addProductInCard(req,res) {
 
     if(error)return res.status(400).json({message:error.details[0].message});
 
-    let [result]=await db.query(`SELECT * FROM Cart WHERE user_id = ? AND state_card="pending"`,[req.user.id]);
+    let [result]=await db.query(`SELECT * FROM Cart WHERE user_id = ? AND is_paid=0`,[req.user.id]);
 
     //create card if not found then store it in card varibales
     if(result.length===0){
@@ -92,6 +91,8 @@ async function addProductInCard(req,res) {
       //create product_item entity and add card id in here and product too and add in it quantity
       [result]=await db.execute(`INSERT INTO Cart_item(cart_id,product_id,quantity) VALUES (?,?,?)`,[card.id,product.id,quantity])
     }
+    //can calculation total price now or in create order endpoint
+    // db.query(`SELECT sum() FROM `)
 
 
   res.status(201).json({message:"add product in card"});
@@ -107,7 +108,7 @@ async function getProductsInCard(req,res){
     FROM Cart_item
     JOIN Cart ON Cart.id=Cart_item.cart_id
     JOIN Product ON Product.id=Cart_item.product_id
-    WHERE Cart.user_id=?
+    WHERE Cart.user_id=? AND Cart.is_paid=0
     `,[req.user.id]);
 
   

@@ -5,7 +5,6 @@ const catchError=require("../utils/catchError");
 const auth=require("../middleware/auth");
 const {
 addProductInCard,
-// confirmCard,
 createCard,
 deleteProductFromCard,
 getProductsInCard,
@@ -17,12 +16,12 @@ router.use(auth);
 
 
 router.route('/')
-.get(catchError(getProductsInCard))
-.post(catchError(createCard))
-.delete(catchError(deleteProductFromCard))
-.patch(catchError(updatequantity));
+.get(catchError(getProductsInCard))//*
+.post(catchError(createCard))//*
+.delete(catchError(deleteProductFromCard))//*
+.patch(catchError(updatequantity));//*
 
-router.post('/addproduct',catchError(addProductInCard));
+router.post('/addproduct',catchError(addProductInCard));//*
 
 
 

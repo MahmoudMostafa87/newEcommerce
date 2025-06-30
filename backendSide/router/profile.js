@@ -21,18 +21,20 @@ router.param("id",validationId);
 
 
 router.route("/")
-.get(admin,catchError(getAllProfils))
-.put(upload.single("image"),catchError(updateMyprofile))
+.get(admin,catchError(getAllProfils))//*
+.put(upload.single("image"),catchError(updateMyprofile))//*
 
-router.get("/myProfile",catchError(getMyprofile));
-router.patch("/uploadImage",upload.single("image"),catchError(updateProfileImage));
+router.get("/myProfile",catchError(getMyprofile));//*
+router.patch("/uploadImage",upload.single("image"),catchError(updateProfileImage));//*
+router.patch("/resetPassword",catchError(updatePassword));//*
+
+
 
 router.route("/:id")
-.get(admin,catchError(getSpcificProfile))
-.patch(admin,catchError(updatePermission))
-.delete(admin,catchError(deleteSpcificProfile));
+.get(admin,catchError(getSpcificProfile))//*
+.patch(admin,catchError(updatePermission))//*
+.delete(admin,catchError(deleteSpcificProfile));//*
 
-router.patch("/resetPassword/:id",catchError(updatePassword));
 
 
 

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #f44336;
+        }
+        .success {
+            background-color: #e8f5e9;
+            color: #4caf50;
+        }
+        .loading {
+            color: #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Update Product</h1>
+    <div class="form-group">
+        <label for="productId">Product ID:</label>
+        <input type="number" id="productId" name="productId" required>
+    </div>
+    <form id="productForm" enctype="multipart/form-data">
+        
+        <div class="form-group">
+            <label for="name">Product Name:</label>
+            <input type="text" id="name" name="name" autocomplete="name">
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" autocomplete="cc-number">
+        </div>
+        
+        <div class="form-group">
+            <label for="stock">Stock Quantity:</label>
+            <input type="number" id="stock" name="stock" min="0" autocomplete="cc-number">
+        </div>
+        
+        <div class="form-group">
+            <label for="Categoryname">Category Name:</label>
+            <input type="text" id="Categoryname" name="Categoryname" autocomplete="name">
+        </div>
+        
+        <div class="form-group">
+            <label for="image">Product Image (Leave empty to keep current):</label>
+            <input type="file" id="image" name="image" accept="image/*">
+        </div>
+        
+        <button type="submit">Update Product</button>
+    </form>
+    
+    <div id="message" class="message" style="display: none;"></div>
+    
+    <script>
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'none';
+            
+            // Show loading state
+            messageDiv.innerHTML = 'Updating product...';
+            messageDiv.className = 'message loading';
+            messageDiv.style.display = 'block';
+            
+            try {
+                const productId = document.getElementById('productId').value;
+                const formData = new FormData(document.getElementById('productForm'));
+                
+                // إضافة الحقول فقط إذا كانت تحتوي على قيم
+                // if(document.getElementById('name').value) formData.append('name', document.getElementById('name').value);
+                // if(document.getElementById('description').value) formData.append('description', document.getElementById('description').value);
+                // if(document.getElementById('price').value) formData.append('price', document.getElementById('price').value);
+                // if(document.getElementById('stock').value) formData.append('stock', document.getElementById('stock').value);
+                // if(document.getElementById('Categoryname').value) formData.append('Categoryname', document.getElementById('Categoryname').value);
+                // if(document.getElementById('image').files[0]) formData.append('image', document.getElementById('image').files[0]);
+                
+                
+                
+                
+                const response = await fetch(`http://localhost:4000/product/${productId}/update_image`, {
+                    method: 'PATCH',
+                    headers: {
+                        // "Content-Type":"application/json",
+                        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzUxMjc4OTk3LCJleHAiOjE3NTE1MzgxOTd9.PZd0qQyQR32WNl8B1sh9nbXDjB5gtuHZc4JhQLFddnU" 
+                    },
+                    body:formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    messageDiv.innerHTML = `Product updated successfully!`;
+                    messageDiv.className = 'message success';
+                    
+                    // Reset form (إعادة تعيين النموذج مع الاحتفاظ بالـ ID)
+                    document.getElementById('productForm').reset();
+                    document.getElementById('productId').value = productId;
+                } else {
+                    messageDiv.innerHTML = `Error: ${result.message || 'Failed to update product'}`;
+                    if (result.error) {
+                        messageDiv.innerHTML += `<br>${JSON.stringify(result.error)}`;
+                    }
+                    messageDiv.className = 'message error';
+                }
+            } catch (error) {
+                messageDiv.innerHTML = `Network error: ${error.message}`;
+                messageDiv.className = 'message error';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -4,7 +4,7 @@ const joi=require("joi");
 
 async function createCategory(req, res) {
     const { name } = req.body;
-        const {error}=joi.string().min(3).max(30).required().validate(name);
+        const {error}=joi.string().min(3).max(100).required().validate(name);
         if(error)return res.status(400).json({status:code(400), error: error.details[0].message });
        
         let [result]=await db.query('SELECT * FROM Category WHERE name = ?', [name])
@@ -44,29 +44,29 @@ async function getProductsFromSpcificCategory(req, res) {
 
 async function updateCategory(req, res) {
     const { name } = req.body;
-    const {error}=joi.string().min(3).max(30).required().validate(name, { abortEarly: false });
+    const {error}=joi.string().min(3).max(100).required().validate(name, { abortEarly: false });
     if(error)return res.status(400).json({status:code(400), error: error.details[0].message });
 
-    let [result] = await db.query('SELECT * FROM Category WHERE name = ? AND id <> ?', [name, req.params.id]);
+    let [result] = await db.query('SELECT * FROM Category WHERE name = ? AND id <> ?', [name, +req.params.id]);
     if (result.length > 0) return res.status(400).json({ status: code(400), error: 'Category name already exists' });
         
     [result] = await db.query('UPDATE Category SET name = ? WHERE id = ?', [name, req.params.id]);
-    if (result.affectedRows === 0) return res.status(404).json({ error: 'Category not found' });
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Category can\'t create it' });
         
-    res.status(200).json({ id: +req.params.id, name });
+    res.status(200).json({ id: req.params.id, name });
 
 }
 
 async function deleteCategory(req, res) {
-    const [rows] = await db.query('SELECT * FROM Category WHERE id = ?', [req.params.id]);
+    const [rows] = await db.query('SELECT * FROM Category WHERE id = ?', [+req.params.id]);
     if (rows.length === 0) return res.status(404).json({ error: 'Category not found' });
     
-    let [result]=db.query(`SELECT * FROM Products
+    let [result]=await db.query(`SELECT * FROM Product
         WHERE category_id=?`,[rows[0].id]);
     
     if (result.length !== 0) return res.status(409).json({ error: 'this cagtegory have products not can delete it'});
     
-    [result] = await db.query('DELETE FROM Category WHERE id = ?', [req.params.id]);
+    [result] = await db.query('DELETE FROM Category WHERE id = ?', [+req.params.id]);
     if (result.affectedRows === 0) return res.status(404).json({ error: 'Category not found' });
         
     res.status(200).json({ message: 'Category deleted' });

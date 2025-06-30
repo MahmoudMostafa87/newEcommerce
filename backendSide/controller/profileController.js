@@ -37,54 +37,50 @@ async function getSpcificProfile(req,res){
 }
 
 async function updateMyprofile(req,res){
-    const {name,email,phone_number,address}=req.body;
+    let {name,email,phone_number,address}=req.body;
     
     const {error}=updateProfile(req.body);
 
     if(error)return res.status(400).json({message:error.details[0].message});
 
     
-    const [result]=await db.query(`
+    let [result]=await db.query(`
         SELECT * FROM Users
-        WHERE email=? AND phone_number=?`,
-        [email,phone_number]);
+        WHERE (email=? OR phone_number=?) AND id<>?`,
+        [email,phone_number,req.user.id]);
         
-    //why 1 if user here not need update his phone
-    if(result.length>1)return res.status(409).json({message:"not can update profile"});
+    if(result.length)return res.status(409).json({message:"not can update profile"});
     
     let image_url;
-    if(req.file){
-        image_url=req.protocol+"://"+req.header("host")+"/"+req.file.path;
-        deleteFile(result[0].image_url.split("\\")[1]);
-    }else{
-        
-    const [result]=await db.query(`
+
+    [result]=await db.query(`
         SELECT * FROM Users
         WHERE id=?`,
         [req.user.id]);
+    
+    if(req.file){
+        image_url=req.protocol+"://"+req.header("host")+"/"+req.file.path;
+        deleteFile(result[0].image_url.split("\\")[1]);
+    }else    
         image_url=result[0].image_url;
-    }
+    
+    if(!address)address=result[0].address;
 
-        if(address){
-            await db.execute(`
-                UPDATE Users
-                SET name=?, email=?,phone_number=?,address=?,image_url=?
-                WHERE id=?`,[name,email,phone_number,address,image_url,req.user.id]);
-        }else{
-            await db.execute(`
-                UPDATE Users
-                SET name=?, email=?,phone_number=?,image_url=?
-                WHERE id=?`,[name,email,phone_number,image_url,req.user.id]);
-        }
+        await db.execute(`
+            UPDATE Users
+            SET name=?, email=?,phone_number=?,address=?,image_url=?
+            WHERE id=?`,[name,email,phone_number,address,image_url,req.user.id]);
     
 
     res.status(200).json({message:"done update profile"});
 }
 
 async function updatePermission(req,res){
+    const {role}=req.body;
+    
+    if(!role)return res.status(400).send("send permission");
+    if(!(role==="admin"||role==="user"))return res.status(400).send("send valid permission from (admin or user)");
 
-    const {error}=updateThingInProfile(req.body);
-    if(error)return res.status(400).json({message:error.details[0].message});
 
     const [result]=await db.query(`SELECT * FROM Users WHERE id=?`,[+req.params.id]);
     if(result.length===0)return res.status(404).json({message:"not found user"});
@@ -92,9 +88,9 @@ async function updatePermission(req,res){
     await db.execute(`
         UPDATE Users 
         SET role=?
-        WHERE id=?`,[req.body.role,+req.params.id]);
+        WHERE id=?`,[role,+req.params.id]);
 
-    res.status(200).json({message:"done update permission for user"});
+    res.status(200).json({message:"done update permission"});
 }
 
 
@@ -108,7 +104,7 @@ async function updateProfileImage(req,res){
     
     if(result.length===0)return res.status(400).send("not found profile");
 
-    deleteFile(result[0].image_url.split("\\")[1]);
+    if(result[0].image_url)deleteFile(result[0].image_url.split("\\")[1]);
 
     await db.execute(`
         UPDATE Users SET image_url=? WHERE id=?`,[image_url,req.user.id]);
@@ -144,10 +140,12 @@ async function updatePassword(req,res){
 async function deleteSpcificProfile(req,res){
  
     const [result]=await db.query(`SELECT * FROM Users WHERE id=?`,[+req.params.id]);
-
+    const [[MyProfile]]=await db.query(`SELECT * FROM Users WHERE id=?`,[req.user.id]);
     if(result.length===0)return res.status(404).send("not found this user");
     
-    deleteFile(result[0].image_url.split("\\")[1]);
+    if(MyProfile.id===result[0].id)return res.status(409).send("you can\'t delete yourself");
+    if(result[0].image_url)
+        deleteFile(result[0].image_url.split("\\")[1]);
 
     await db.execute("DELETE FROM Users WHERE id=?",[+req.params.id]);
 

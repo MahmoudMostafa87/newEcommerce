@@ -17,15 +17,15 @@ const {
 router.param('id', validateId);
 
 router.route('/')
-.post(auth, admin, catchError(createCategory))
-.get(catchError(getAllCategories));
+.post(auth, admin, catchError(createCategory))//*
+.get(catchError(getAllCategories));//*
 
-router.get("/:id/products",catchError(getProductsFromSpcificCategory));
+router.get("/:id/products",catchError(getProductsFromSpcificCategory));//*
 
 router.route("/:id")
-    .get(catchError(getCategoryById))
-    .put(auth,admin,catchError(updateCategory))
-    .delete(auth,admin, catchError(deleteCategory));
+    .get(catchError(getCategoryById))//*
+    .put(auth,admin,catchError(updateCategory))//*
+    .delete(auth,admin, catchError(deleteCategory));//*
     
 
 
