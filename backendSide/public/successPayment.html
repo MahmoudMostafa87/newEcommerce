@@ -1,0 +1,117 @@
+<!-- public/payment-success.html
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>نجاح الدفع</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f8f9fa; text-align: center; padding-top: 100px; }
+    .status { font-size: 24px; margin-top: 30px; }
+    .success { color: green; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+
+  <h1>⏳ جاري تأكيد الدفع...</h1>
+  <div id="result" class="status"></div>
+
+  <script>
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get('token'); // هذا هو orderId
+      const cartId = params.get('cartId');
+
+      if (!orderId || !cartId) {
+        document.getElementById("result").className = "status fail";
+        document.getElementById("result").textContent = "❌ معلومات الدفع ناقصة.";
+        return;
+      }
+
+      try {
+        const res = await fetch("/transactions/capture-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" ,
+            "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNzUxMzAwMzQ1LCJleHAiOjE3NTE1NTk1NDV9.LbdgD88QsjCcpBJEaOs_KAe65TKTBDEGLHjluYRyfVI"
+          },
+          body: JSON.stringify({ orderId, cartId }),
+        });
+
+        const data = await res.json();
+        console.log(res.status);
+        console.log(data);
+        if (res.ok) {
+          document.querySelector("h1").textContent = "✅ تم الدفع بنجاح";
+          document.getElementById("result").className = "status success";
+          document.getElementById("result").textContent = "شكراً لك! تم تأكيد الدفع.";
+        } else {
+          document.querySelector("h1").textContent = "❌ فشل الدفع";
+          document.getElementById("result").className = "status fail";
+          document.getElementById("result").textContent = data.message || "حدث خطأ.";
+        }
+      } catch (err) {
+        console.log(err.message);
+        console.log(err);
+        document.querySelector("h1").textContent = "⚠️ خطأ في الاتصال";
+        document.getElementById("result").className = "status fail";
+        document.getElementById("result").textContent = "فشل في الاتصال بالسيرفر.";
+      }
+    })();
+  </script>
+
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PayPal Payment</title>
+</head>
+<body>
+
+<h2>Pay with PayPal</h2>
+
+<!-- Container for the PayPal button -->
+<div id="paypal-button-container"></div>
+
+<!-- Load the PayPal JS SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AZx3w27xP8_0LO5iL3aIzHXp9jcEVrOesCYNlDOaLdoNWLgudACxLx4GLQwXnwDXDGImEnrbs3paFY-p&currency=USD"></script>
+
+<script>
+  paypal.Buttons({
+    // إنشاء الدفع
+    createOrder: function(data, actions) {
+      return fetch('/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(function(res) {
+        return res.json();
+      }).then(function(orderData) {
+        return orderData.id;
+      });
+    },
+    // بعد دفع المستخدم
+    onApprove: function(data, actions) {
+      return fetch('/capture-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          orderID: data.orderID
+        })
+      }).then(function(res) {
+        return res.json();
+      }).then(function(details) {
+        alert('Transaction completed by ' + details.payer.name.given_name);
+        // يمكنك هنا إعادة توجيه المستخدم أو تحديث حالة الطلب
+      });
+    }
+  }).render('#paypal-button-container');
+</script>
+
+</body>
+</html>

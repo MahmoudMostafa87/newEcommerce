@@ -1,12 +1,11 @@
 const {
-    client, // هذا هو PayPalHttpClient المهيأ
-    generateAccessToken,
-    OrdersCreateRequest, // نستورد دالة البناء مباشرة
-    OrdersCaptureRequest // نستورد دالة البناء مباشرة
+    // client, // هذا هو PayPalHttpClient المهيأ
+    // generateAccessToken,
+    // OrdersCreateRequest, // نستورد دالة البناء مباشرة
+    // OrdersCaptureRequest // نستورد دالة البناء مباشرة
 } = require("../utils/paymentMethod");
 const db=require("../module/db");
 const axios = require('axios');
-
 
 
 
@@ -67,34 +66,61 @@ async function createOrder(req, res){
   `, [result[0].id]);
 
   if (cartItems.length === 0) return res.status(400).json({ message: "Cart is empty" });
+ const accessToken = await generateAccessToken();
 
-    const request = new OrdersCreateRequest();
-    request.prefer("return=representation");
-    request.requestBody({
-        intent: "CAPTURE",
-        purchase_units: [
-            {
-                amount: {
-                    currency_code: "USD",
-                    value: cartItems[0].TotalPrice,
-                },
-            },
-        ],
-    })
-  const response = await client.execute(request);
-  const approveLink = response.result.links.find(link => link.rel === 'approve');
-  const approveUrl = approveLink ? approveLink.href : null;
-    if (!approveUrl) 
+  const response = await axios.post(
+    `${baseURL}/v2/checkout/orders`,
+    {
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "USD",
+            value: cartItems[0].TotalPrice,
+          },
+        },
+      ],
+      application_context: {
+        return_url: "http://localhost:4000/transactions/success",
+        cancel_url: "http://localhost:4000/transactions/cancel",
+      },
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  // const response = await client.execute(request);
+    const approvalUrl = response.data.links.find((link) => link.rel === "approve").href;
+    if (!approvalUrl) 
         return res.status(500).json({ message: "Failed to get PayPal approval URL." });
     
   db.execute(`UPDATE Cart SET totalPrice=? WHERE id=?`,[cartItems[0].TotalPrice,result[0].id])
-  
-  res.status(201).json({ orderId: response.result.id,
-    cartId:result[0].id,
-          approveUrl: approveUrl 
-    });
+    res.redirect(approvalUrl);
 };
 
+
+
+async function successPayMent(req,res) {
+  const token = req.query.token;
+  const accessToken = await generateAccessToken();
+
+  const response = await axios.post(
+    `${baseURL}/v2/checkout/orders/${token}/capture`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  res.render("success", { details: response.data });
+}
 
 //do loop on price and quantity for each product in cart to send balance for user but with reduce the commection *
 //do join between cart_item and card and product *
@@ -108,9 +134,12 @@ async function createOrder(req, res){
 async function captureOrder(req, res){
   const {orderId,cartId} = req.body;
 
+
+    // const [[{cartId}]]=await db.query(`SELECT max(id) as id FROM Cart WHERE user_id=?`,[req.user.id])
+
     const request = new OrdersCaptureRequest(orderId);
     request.requestBody({});
-
+    console.log(request);
     const capture = await client.execute(request);
     const captureStatus = capture.result.status;
 
@@ -292,7 +321,8 @@ module.exports={
     getSpcificTransaction,
     captureOrder,
     createOrder,
-    withdraw
+    withdraw,
+    successPayMent
 }
 
 

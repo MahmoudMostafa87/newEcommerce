@@ -111,7 +111,6 @@ async function getProductsInCard(req,res){
     WHERE Cart.user_id=? AND Cart.is_paid=0
     `,[req.user.id]);
 
-  
   if(result.length===0)return res.status(404).json({message:"card is empty"});
 
   res.status(200).json(result);
@@ -167,6 +166,12 @@ async function updatequantity(req,res){
       JOIN Product ON Product.id=Cart_item.product_id
       and Product.id=?`,[productid]);
     
+      //لو المنتج الكمية بتعته صفر هنمسحه
+      [result]=await db.query(`SELECT * FROM Cart_item WHERE product_id=?`,[productid]);
+      if(result[0].quantity===0){
+        db.query(`DELETE FROM Cart_item WHERE product_id=?`,[productid])
+      }
+
       res.status(200).json({message:"done updated"});
 };
 

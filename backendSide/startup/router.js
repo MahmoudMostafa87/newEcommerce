@@ -42,8 +42,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNzUxMzAwMjkzLCJleHAiOjE
   "password":"asdnasdkjb"
   
 paypal_email:sb-jhpyw40756501@personal.example.com
+password_paypal:3CX9X/^t
 
   }
+
+
 
 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNzUxMzAwMzQ1LCJleHAiOjE3NTE1NTk1NDV9.LbdgD88QsjCcpBJEaOs_KAe65TKTBDEGLHjluYRyfVI

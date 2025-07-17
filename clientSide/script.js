@@ -1,15 +1,63 @@
-// script.js
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+//التكلفة الكليه للاسعار فى الكارت كدة كدة هجبها من عندي من الbackend 
+//GET /cart/   [{name product,price product,image product,item quantity}]
 
-function updateCartCount() {
-  const cartCountElement = document.getElementById("cart-count");
-  if (cartCountElement) {
-    cartCountElement.textContent = cartCount;
-  }
+
+//بترجع المنتجات الى فى الكارت
+async function getProductsInCard(){
+  const res=await fetch("http://localhost:4000/cart",{
+    method:"GET",
+    credentials: "include",
+    headers:{
+      "Content-Type":"application/json"
+    },
+  });
+  if(!res.ok)return 0;
+    const products=await res.json();
+  return products;
+};
+
+//بترجع السعر الكلي للكارت
+async function getTotalPrice(){
+ const products=await getProductsInCard();
+  let total=0;
+
+    products= products.forEach(product=>
+            total+=(product.price * product.quantity)
+    );
+
+    return total;
 }
 
+
+// let cart = JSON.parse(localStorage.getItem("cart")) || [];
+// let cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+
+//بيحسب عدد العناصر فى السله الصغيرة
+async function updateCartCount() {
+  
+    const res=await fetch("http://localhost:4000/cart",{
+    method:"GET",  
+    credentials: "include",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    });
+  
+    if(!res.ok)return 0;
+
+    const products=await res.json();
+
+    const cartCountElement = document.getElementById("cart-count");
+  
+    if (cartCountElement) {
+      cartCountElement.textContent = products.length;
+    }
+}
+
+
+//لم بضيف عنص فى السله بيعرض على جنب انه تم اضافة العنصر
 function showNotification(message) {
   const notification = document.createElement("div");
   notification.className =
@@ -29,67 +77,115 @@ function showNotification(message) {
   }, 3000);
 }
 
-function addToCart(productName, price, originalPrice = null) {
-  const existingItem = cart.find((item) => item.name === productName);
+// هضيف عنصر فى السله 
+//POST cart/addProdcut
+async function addToCart(productid, quantitiy=1) {
+  //بشوف لو المنتج موجود ولا لا
+  const products= await getProductsInCard();
 
-  // تنظيف السعر وتحويله إلى رقم
-  const cleanPrice = parseFloat(price.replace(/[^\d.]/g, ""));
-  const cleanOriginalPrice = originalPrice
-    ? parseFloat(originalPrice.replace(/[^\d.]/g, ""))
-    : null;
+  //بعمل لووب عشان اعرف المنتج موجود ولا لا
+  //لو موجود هينادي فى الدالة تعديل الكمية الى فيها الapi
+  //الخاص بتعديل الكمية
+  let foundit;
+  products.forEach(product=>{
+    if(product.id==productid){
+      updateQuantity(productid,quantitiy);
+      foundit=true;
 
-  if (existingItem) {
-    existingItem.quantity++;
-  } else {
-    cart.push({
-      name: productName,
-      price: cleanPrice,
-      originalPrice: cleanOriginalPrice,
-      quantity: 1,
+    return;
+    }
+  });
+
+  //لو المنتج مش موجود هيروح على الendpoint
+  //الى بيضيف العنصر فى الCard الجدول
+  if(!foundit){
+
+    const res=await fetch("http://localhost:4000/cart/addProduct",{
+      method:"POST",
+      credentials: "include",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({productid,quantitiy})
     });
+
+    const message=await res.json();
+    showNotification(message);
   }
 
-  cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-  localStorage.setItem("cart", JSON.stringify(cart));
+  // const existingItem = cart.find((item) => item.name === productName);
+
+  // تنظيف السعر وتحويله إلى رقم
+  // const cleanPrice = parseFloat(price.replace(/[^\d.]/g, ""));
+  // const cleanOriginalPrice = originalPrice
+  //   ? parseFloat(originalPrice.replace(/[^\d.]/g, ""))
+  //   : null;
+
+  // if (existingItem) {
+  //   existingItem.quantity++;
+  // } else {
+  //   cart.push({
+  //     name: productName,
+  //     price: cleanPrice,
+  //     originalPrice: cleanOriginalPrice,
+  //     quantity: 1,
+  //   });
+  // }
+
+//هتعدل الرقم الى بيظهر فى السله وهتعرض فوق على اليمين الرسالة الخاصة بأضافة العنصر
   updateCartCount();
   showNotification(`تم إضافة "${productName}" إلى السلة بنجاح!`);
 }
 
-function updateQuantity(index, newQuantity) {
-  if (newQuantity <= 0) {
-    removeFromCart(index);
-    return;
-  }
-
-  cart[index].quantity = newQuantity;
-  cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-  localStorage.setItem("cart", JSON.stringify(cart));
+//هنعدل المنتج لو بالسالب يبقى ينقص والعكس
+//فى الباك أند بيشوف لو المنتج موجود ولا الكمية بصفر وبيشيله لوحده
+async function updateQuantity(productid,quantitiy) {
+   const res=await fetch("http://localhost:4000/cart",{
+    method:"PATCH",
+    credentials: "include",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({productid,quantitiy})
+  });
+  
+  if(!res.ok)return 0;
+  const message=await res.json();
+  showNotification(message);
+  
   updateCartCount();
   renderCartItems();
 }
 
-function renderCartItems() {
+
+//الدالة دي وظيفتها اية
+async function renderCartItems() {
   const cartItemsContainer = document.getElementById("cart-items");
   const cartTotalElement = document.getElementById("cart-total");
   const subtotalElement = document.getElementById("subtotal");
   const savingsElement = document.getElementById("savings");
   const emptyCartElement = document.getElementById("empty-cart");
+  const products=await getProductsInCard();
 
-  console.log("renderCartItems called");
-  console.log("cart:", cart);
-  console.log("cartItemsContainer:", cartItemsContainer);
+  // console.log("renderCartItems called");
+  // console.log("cart:", cart);
+  // console.log("cartItemsContainer:", cartItemsContainer);
 
+  //دى اية
   if (!cartItemsContainer) {
     console.log("cartItemsContainer not found");
     return;
   }
 
+  //دي لي؟
   cartItemsContainer.innerHTML = "";
   let subtotal = 0;
   let totalSavings = 0;
 
-  if (cart.length === 0) {
+//دي كلها بتعمل اية؟
+  if (products.length === 0) {
     console.log("Cart is empty");
+
     if (emptyCartElement) {
       emptyCartElement.classList.remove("hidden");
     }
@@ -112,20 +208,21 @@ function renderCartItems() {
     tableElement.style.display = "table";
   }
 
-  cart.forEach((item, index) => {
+  products.forEach((item, index) => {
     // التأكد من أن السعر والكمية أرقام صحيحة
-    const itemPrice =
-      typeof item.price === "number"
-        ? item.price
-        : parseFloat(item.price.toString().replace(/[^\d.]/g, "")) || 0;
-    const itemQuantity = item.quantity || 1;
-    const itemOriginalPrice =
-      item.originalPrice && typeof item.originalPrice === "number"
-        ? item.originalPrice
-        : item.originalPrice
-        ? parseFloat(item.originalPrice.toString().replace(/[^\d.]/g, ""))
-        : itemPrice;
+    // const itemPrice =
+    //   typeof item.price === "number"
+    //     ? item.price
+    //     : parseFloat(item.price.toString().replace(/[^\d.]/g, "")) || 0;
+    // const itemQuantity = item.quantity || 1;
+    // const itemOriginalPrice =
+    //   item.originalPrice && typeof item.originalPrice === "number"
+    //     ? item.originalPrice
+    //     : item.originalPrice
+    //     ? parseFloat(item.originalPrice.toString().replace(/[^\d.]/g, ""))
+    //     : itemPrice;
 
+    //دي بتعمل اية
     const itemTotal = itemPrice * itemQuantity;
     const originalTotal = itemOriginalPrice * itemQuantity;
     const itemSavings = originalTotal - itemTotal;
@@ -195,15 +292,29 @@ function renderCartItems() {
   console.log("Finished rendering cart items");
 }
 
-function removeFromCart(index) {
-  const removedItem = cart.splice(index, 1);
-  cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-  localStorage.setItem("cart", JSON.stringify(cart));
+//امسح باستخدام الid
+//DELETE /cart/
+async function removeFromCart(productid) {
+  //مسح المنتج من الكارت بستخدام الباك
+  await fetch("http://localhost:4000/cart/",{
+    method:"DELETE",
+    credentials: "include",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({productid})
+  });
+
+  // const removedItem = cart.splice(index, 1);
+  // cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  // localStorage.setItem("cart", JSON.stringify(cart));
+
   updateCartCount();
   showNotification(`تم حذف "${removedItem[0].name}" من السلة.`);
   renderCartItems();
 }
 
+//كل دول بيعملوا اية
 // Modal functions
 function openModal(modalId) {
   const modal = document.getElementById(modalId);

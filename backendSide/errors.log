@@ -1,3 +1,32 @@
 {"level":"error"}
 {"level":"error"}
 {"level":"error","message":"Error in PayPal environment setup: checkoutNodeJssdk.SandboxEnvironment is not a constructor"}
+{"date":"Tue Jul 01 2025 19:08:26 GMT+0300 (توقيت شرق أوروبا الصيفي)","error":{"code":"ECONNREFUSED","message":""},"level":"error","message":"unhandledRejection: (no error message)\nError\n    at Object.createConnectionPromise [as createConnection] (E:\\project_ecommerce\\backendSide\\node_modules\\mysql2\\promise.js:19:31)\n    at E:\\project_ecommerce\\backendSide\\module\\db.js:6:34\n    at Object.<anonymous> (E:\\project_ecommerce\\backendSide\\module\\db.js:16:3)\n    at Module._compile (node:internal/modules/cjs/loader:1376:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)\n    at Module.load (node:internal/modules/cjs/loader:1207:32)\n    at Module._load (node:internal/modules/cjs/loader:1023:12)\n    at Module.require (node:internal/modules/cjs/loader:1235:19)\n    at require (node:internal/modules/helpers:176:18)\n    at Object.<anonymous> (E:\\project_ecommerce\\backendSide\\controller\\homeController.js:1:10)","os":{"loadavg":[0,0,0],"uptime":279809.5},"process":{"argv":["C:\\Program Files\\nodejs\\node.exe","E:\\project_ecommerce\\backendSide\\server.js"],"cwd":"E:\\project_ecommerce\\backendSide","execPath":"C:\\Program Files\\nodejs\\node.exe","gid":null,"memoryUsage":{"arrayBuffers":72395,"external":4158967,"heapTotal":34791424,"heapUsed":23000328,"rss":63352832},"pid":11360,"uid":null,"version":"v20.11.1"},"rejection":true,"stack":"Error\n    at Object.createConnectionPromise [as createConnection] (E:\\project_ecommerce\\backendSide\\node_modules\\mysql2\\promise.js:19:31)\n    at E:\\project_ecommerce\\backendSide\\module\\db.js:6:34\n    at Object.<anonymous> (E:\\project_ecommerce\\backendSide\\module\\db.js:16:3)\n    at Module._compile (node:internal/modules/cjs/loader:1376:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)\n    at Module.load (node:internal/modules/cjs/loader:1207:32)\n    at Module._load (node:internal/modules/cjs/loader:1023:12)\n    at Module.require (node:internal/modules/cjs/loader:1235:19)\n    at require (node:internal/modules/helpers:176:18)\n    at Object.<anonymous> (E:\\project_ecommerce\\backendSide\\controller\\homeController.js:1:10)","trace":[{"column":31,"file":"E:\\project_ecommerce\\backendSide\\node_modules\\mysql2\\promise.js","function":"Object.createConnectionPromise [as createConnection]","line":19,"method":"createConnectionPromise [as createConnection]","native":false},{"column":34,"file":"E:\\project_ecommerce\\backendSide\\module\\db.js","function":null,"line":6,"method":null,"native":false},{"column":3,"file":"E:\\project_ecommerce\\backendSide\\module\\db.js","function":null,"line":16,"method":null,"native":false},{"column":14,"file":"node:internal/modules/cjs/loader","function":"Module._compile","line":1376,"method":"_compile","native":false},{"column":10,"file":"node:internal/modules/cjs/loader","function":"Module._extensions..js","line":1435,"method":".js","native":false},{"column":32,"file":"node:internal/modules/cjs/loader","function":"Module.load","line":1207,"method":"load","native":false},{"column":12,"file":"node:internal/modules/cjs/loader","function":"Module._load","line":1023,"method":"_load","native":false},{"column":19,"file":"node:internal/modules/cjs/loader","function":"Module.require","line":1235,"method":"require","native":false},{"column":18,"file":"node:internal/modules/helpers","function":"require","line":176,"method":null,"native":false},{"column":10,"file":"E:\\project_ecommerce\\backendSide\\controller\\homeController.js","function":null,"line":1,"method":null,"native":false}]}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"path must be absolute or specify root to res.sendFile"}
+{"level":"error"}
+{"level":"error","message":"path must be absolute or specify root to res.sendFile"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}
+{"level":"error","message":"Cannot read properties of undefined (reading 'split')"}
+{"level":"error"}

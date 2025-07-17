@@ -34,7 +34,7 @@ async function addProductController(req, res) {
 
     if (result.affectedRows === 0) return res.status(500).json({ message: code(500) });
 
-    res.status(201).json({ message: code(201)});
+    res.status(201).redirect('/product');
 
 }
 
@@ -145,7 +145,7 @@ async function updateProductController(req, res) {
 
     if (result.affectedRows === 0) return res.status(500).json({ message: code(500) });
 
-    res.status(201).json({ message: code(201)});
+    res.status(201).redirect('/product');
 }
 
 
@@ -203,7 +203,7 @@ async function updateThingInProductController(req,res){
 
     if (result.affectedRows === 0) return res.status(500).json({ message: code(500) });
 
-    res.status(201).json({ message: code(201)});
+    res.status(201).redirect('/product');
 }
 
 
@@ -222,7 +222,7 @@ async function updateImageProduct(req,res){
     await db.query(`
         UPDATE Product SET image_url=? WHERE id=?`,[image_url,req.params.id])
     
-    res.status(200).json({message:"done update it"});
+    res.status(200).redirect('/product');
 }
 
 async function deleteProductController(req, res) {
@@ -237,7 +237,7 @@ async function deleteProductController(req, res) {
     
     if(result.affectedRows===0)return res.status(500).json({message:code(500)});
 
-    res.status(200).json({message:"product deleted"});
+    res.status(200).redirect('/product');
 }
 
 

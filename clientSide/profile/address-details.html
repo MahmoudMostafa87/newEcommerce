@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عنوان التسليم</title>
+    <link rel="stylesheet" href="css/all.css">
+    <link rel="icon" href="img/icon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-100 to-white min-h-screen flex items-center justify-center">
+  <div class="w-full min-h-screen flex items-center justify-center py-10">
+    <div class="w-full flex flex-col md:flex-row gap-8 px-2 md:px-10">
+      <!-- مربع العنوان -->
+      <div class="md:w-1/2 w-full bg-white rounded-2xl shadow-lg p-8 border border-indigo-100">
+        <h2 class="text-2xl font-bold mb-6 text-indigo-700 flex items-center gap-3">
+          <i class="fas fa-home text-indigo-500 text-2xl"></i>
+          عنوان التسليم
+        </h2>
+        <form>
+          <div class="space-y-5">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">البريد الإلكتروني</label>
+              <input type="email" placeholder="ادخل بريدك الإلكتروني"
+                class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base transition" required />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">الاسم</label>
+              <input type="text" placeholder="ادخل اسمك"
+                class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base transition" required />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">العنوان</label>
+              <input type="text" placeholder="ادخل عنوانك"
+                class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base transition" required />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">رقم الهاتف</label>
+              <input type="number" placeholder="ادخل رقم هاتفك"
+                class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base transition" required />
+            </div>
+            <button type="submit"
+              class="w-full mt-6 rounded-lg bg-indigo-600 px-4 py-2 text-white text-lg font-bold shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 transition">
+              حفظ العنوان
+            </button>
+          </div>
+        </form>
+      </div>
+    
+  <div class="md:w-1/2 w-full bg-white rounded-2xl shadow-lg p-8 border border-indigo-100 flex flex-col">
+  <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+    <i class="fas fa-shopping-cart text-indigo-500"></i>
+    المنتجات التي تم شراؤها
+  </h3>
+  <div id="checkout-products" class="space-y-3 mb-6">
+  </div>
+  <div class="border-t pt-4 space-y-2">
+    <div class="flex justify-between text-gray-700">
+      <span>الإجمالي الفرعي:</span>
+      <span id="subtotal" class="font-semibold">ج.م</span>
+    </div>
+    <div class="flex justify-between text-gray-700">
+      <span>الشحن:</span>
+      <span id="shipping" class="font-semibold"> ج.م</span>
+    </div>
+    <div class="flex justify-between text-gray-900 text-lg font-bold border-t pt-2">
+      <span>الإجمالي الكلي:</span>
+      <span id="total">0 ج.م</span>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+  <script>
+let products = JSON.parse(localStorage.getItem('orders')) || [];
+document.querySelector('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const email = this.querySelector('input[type="email"]').value;
+  const name = this.querySelector('input[type="text"]').value;
+  const address = this.querySelectorAll('input[type="text"]')[1].value;
+  const phone = this.querySelector('input[type="number"]').value;
+
+  const deliveryData = { email, name, address, phone };
+  localStorage.setItem('deliveryData', JSON.stringify(deliveryData));
+  alert('تم حفظ بيانات التسليم بنجاح!');
+});
+function renderProducts() {
+  const container = document.getElementById('checkout-products');
+  if (!products.length) {
+    container.innerHTML = '<p class="text-gray-500">لا توجد منتجات</p>';
+    document.getElementById('subtotal').textContent = '0 ج.م';
+    document.getElementById('total').textContent = '0 ج.م';
+    return;
+  }
+  let subtotal = 0;
+  container.innerHTML = products.map((p) => {
+    subtotal += p.price * p.qty;
+    return `
+      <div class="flex items-center justify-between p-3 bg-indigo-50 rounded border gap-3">
+        <img src="${p.image}" alt="${p.name}" class="w-14 h-14 rounded shadow border object-cover">
+        <div class="flex-1">
+          <span class="font-medium text-gray-800 block">${p.name}</span>
+          <span class="text-xs text-gray-500 block mt-1">تاريخ الشراء: ${p.date || '-'}</span>
+        </div>
+        <span class="w-8 text-center inline-block">${p.qty}</span>
+        <span class="text-gray-700 font-semibold">${p.price * p.qty} ج.م</span>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('subtotal').textContent = subtotal + ' ج.م';
+  const shipping = 20;
+  document.getElementById('shipping').textContent = shipping + ' ج.م';
+  document.getElementById('total').textContent = (subtotal + shipping) + ' ج.م';
+}
+renderProducts();
+  </script>
+</body>
+</html>

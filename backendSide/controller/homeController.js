@@ -38,12 +38,18 @@ async function SignIN(req,res){
     const isValidPassword=await bcrypt.compare(password,user.password);
     if(!isValidPassword) return res.status(401).json({message:message(401)});
     
-    const token=jwt.sign({id:user.id},process.env.JWT_SECRET,{expiresIn:"3d"});
+    const token=jwt.sign({id:user.id},process.env.JWT_SECRET,{expiresIn:"30d"});
     
-
+    res.cookie("token",token,{
+        httpOnly:true,
+        maxAge: 24 * 60 * 60 * 1000 * 30 ,//30d
+        secure: false,
+        sameSite:"lax",
+        path:"/"
+    });
     res.status(200).json({
         message:message(200),
-        token:token,
+        /*token,*/
         user:{
             id:user.id,
             name:user.name,
@@ -85,9 +91,17 @@ async function SignUp(req,res){
 
         
         //send otp on email and id in body
-    const token=jwt.sign({id},process.env.JWT_SECRET,{expiresIn:"3d"});
+    const token=jwt.sign({id},process.env.JWT_SECRET,{expiresIn:"30d"});
     
-    res.status(201).json({message:message(201),token,userId:id});
+    res.cookie("token",token,{
+        httpOnly:true,
+        maxAge: 24 * 60 * 60 * 1000 * 30 ,//30d
+        secure: false,
+        sameSite:"lax",
+        path:"/"
+    });
+
+    res.status(201).json({message:message(201),/*token,*/userId:id});
 }
 
 //check from otp in body with otp in table User

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تعديل المنتج</title>
+  <style>
+    body {
+      background-color: #eef2ff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      width: 400px;
+    }
+
+    .card h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #3b28d1;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      resize: none;
+      height: 80px;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background-color: #3b28d1;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #2d1ebf;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>تعديل المنتج</h2>
+    <form id="editProductForm" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="image_url">رابط الصورة</label>
+        <input type="text" id="image_url" name="image_url">
+      </div>
+      <div class="form-group">
+        <label for="name">اسم المنتج</label>
+        <input type="text" id="name" name="name">
+      </div>
+      <div class="form-group">
+        <label for="description">الوصف</label>
+        <textarea id="description" name="description"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="price">السعر</label>
+        <input type="number" id="price" name="price" step="0.01">
+      </div>
+      <div class="form-group">
+        <label for="stock">الكمية المتوفرة</label>
+        <input type="number" id="stock" name="stock">
+      </div>
+      <div class="form-group">
+        <label for="category">التصنيف</label>
+        <input type="text" id="category" name="Categoryname">
+      </div>
+      <div class="form-group">
+        <label for="rating">التقييم</label>
+        <input type="number" id="rating" name="rating" step="0.1" min="0" max="5">
+      </div>
+      <div class="form-group">
+        <label for="commission_rate">نسبة العمولة (%)</label>
+        <input type="number" id="commission_rate" name="commission_rate" step="0.1">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn">حفظ التعديلات</button>
+      </div>
+    </form>
+  </div>
+</body>
+<script>
+    
+// تعديل
+const id=sessionStorage.getItem("id");
+
+    const body=new FormData(document.getElementById("editProductForm"));
+  
+    const res=await fetch(`http://localhost:4000/product/${id}`,
+        {
+            method:"PUT",
+            headers:{
+              "Content-Type":"application/json"
+            },
+            credentials:"include",
+            body,
+        }
+      );
+
+      if(!res.ok) throw new Error(`code : ${res.status}, message : ${res.statusText}`);
+   
+</script>
+</html>

@@ -9,7 +9,8 @@ const {
     getAllTransactions,
     getMyTransactions,
     getSpcificTransaction,
-    withdraw
+    withdraw,
+    successPayMent
 }=require("../controller/transactionsController");
 
 router.param("id",validationId);
@@ -20,7 +21,12 @@ router.use(auth);
 router.get("/",admin,catchError(getAllTransactions));
 router.get("/my-transaction",catchError(getMyTransactions));
 router.post("/create-order",catchError(createOrder));
-router.post("/capture-order",catchError(captureOrder));
+router.get("/success",catchError(successPayMent));
+router.post("/capture-order",catchError(captureOrder));////////////
+
+// app.get("/cancel", (req, res) => {
+//   res.send("تم إلغاء الدفع.");
+// })
 
 router.post("/withdraw",catchError(withdraw));
 router.get("/:id",catchError(getSpcificTransaction));
