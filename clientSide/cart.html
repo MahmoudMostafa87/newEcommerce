@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>سلة التسوق - رقمي</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.stripe.com/v3/"></script>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
@@ -13,40 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <style>
-      body {
-        font-family: "Cairo", sans-serif;
-      }
-      .quantity-btn {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      .quantity-btn:hover {
-        transform: scale(1.1);
-      }
-      .payment-method {
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 16px;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      .payment-method:hover {
-        border-color: #3b82f6;
-        background-color: #f8fafc;
-      }
-      .payment-method.selected {
-        border-color: #3b82f6;
-        background-color: #eff6ff;
-      }
-    </style>
+    <link rel="stylesheet" href="./styles/card.css">
   </head>
   <body class="font-sans bg-gray-100 text-gray-900">
     <!-- Header -->
@@ -86,87 +54,7 @@
               <div
                 id="dropdown-menu"
                 class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-md rounded-md hidden z-50"
-              >
-                <ul class="text-sm text-right p-2 space-y-1">
-                  <li>
-                    <a
-                      href="products/index.html"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >تجارة وأعمال</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >روايات وقصص</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >تعليم وأطفال</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >اشتراكات</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >طبخ</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >ألعاب وترفيه</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >صحة ورياضة</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >خدمات</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >مجانية</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >قوالب</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >رمضان</a
-                    >
-                  </li>
-                </ul>
-              </div>
+              ></div>
             </div>
 
             <a href="show-products.html" class="hover:text-blue-600 font-bold"
@@ -198,6 +86,9 @@
         </div>
       </div>
     </header>
+
+
+
 
     <main class="container mx-auto px-4 py-8">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -256,80 +147,11 @@
                 <span id="cart-total">0.00 ر.س</span>
               </div>
             </div>
-
-            <!-- Terms Agreement -->
-            <div class="mb-6">
-              <label class="flex items-start space-x-2 space-x-reverse text-sm">
-                <input type="checkbox" id="terms-checkbox" class="mt-1" />
-                <span
-                  >أوافق على
-                  <a href="#" class="text-blue-600 hover:underline"
-                    >الشروط والأحكام</a
-                  ></span
-                >
-              </label>
-            </div>
-
-            <!-- Payment Methods -->
-            <div class="mb-6">
-              <h4 class="font-bold mb-3">طرق دفع آمنة</h4>
-              <div class="space-y-3">
-                <div class="payment-method" data-method="visa">
-                  <div class="flex items-center space-x-3 space-x-reverse">
-                    <input
-                      type="radio"
-                      name="payment"
-                      value="visa"
-                      class="text-blue-600"
-                    />
-                    <i class="fab fa-cc-visa text-2xl text-blue-600"></i>
-                    <span>فيزا / ماستركارد</span>
-                  </div>
-                </div>
-
-                <div class="payment-method" data-method="paypal">
-                  <div class="flex items-center space-x-3 space-x-reverse">
-                    <input
-                      type="radio"
-                      name="payment"
-                      value="paypal"
-                      class="text-blue-600"
-                    />
-                    <i class="fab fa-cc-paypal text-2xl text-blue-600"></i>
-                    <span>باي بال</span>
-                  </div>
-                </div>
-
-                <div class="payment-method" data-method="apple-pay">
-                  <div class="flex items-center space-x-3 space-x-reverse">
-                    <input
-                      type="radio"
-                      name="payment"
-                      value="apple-pay"
-                      class="text-blue-600"
-                    />
-                    <i class="fab fa-apple-pay text-2xl text-gray-800"></i>
-                    <span>Apple Pay</span>
-                  </div>
-                </div>
-
-                <div class="payment-method" data-method="bank-transfer">
-                  <div class="flex items-center space-x-3 space-x-reverse">
-                    <input
-                      type="radio"
-                      name="payment"
-                      value="bank-transfer"
-                      class="text-blue-600"
-                    />
-                    <i class="fas fa-university text-2xl text-green-600"></i>
-                    <span>تحويل بنكي</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+            
+          <!-- الدفع هنا -->
             <!-- Checkout Button -->
             <button
+              onclick="proceedToStripeCheckout()"  
               id="checkout-btn"
               class="w-full bg-gray-600 text-white py-3 rounded-lg font-bold text-lg transition hover:bg-gray-700"
               disabled
@@ -348,7 +170,7 @@
     >
       <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
         <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold">تسجيل الدخول</h2>
+          <a href="./auth/signin.html" class="text-2xl font-bold">تسجيل الدخول</a>
           <button
             id="close-login-modal"
             class="text-gray-500 hover:text-gray-700 text-2xl"
@@ -357,110 +179,8 @@
           </button>
         </div>
 
-        <p class="text-gray-600 mb-6 text-center">
-          مرحباً بعودتك، عند إدخال بريدك الإلكتروني ستصلك رسالة تحتوي على رابط
-          الدخول لحسابك
-        </p>
 
-        <form id="login-form">
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-              بريدك الإلكتروني *
-            </label>
-            <input
-              type="email"
-              id="login-email"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            class="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition"
-          >
-            إرسال رابط الدخول
-          </button>
-
-          <div class="text-center mt-4">
-            <a
-              href="#"
-              id="show-register"
-              class="text-blue-600 hover:underline text-sm"
-            >
-              للتسجيل اضغط هنا
-            </a>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Register Modal -->
-    <div
-      id="register-modal"
-      class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center"
-    >
-      <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold">تسجيل</h2>
-          <button
-            id="close-register-modal"
-            class="text-gray-500 hover:text-gray-700 text-2xl"
-          >
-            &times;
-          </button>
-        </div>
-
-        <p class="text-gray-600 mb-6 text-center">
-          سجل معنا الآن لشراء المنتجات بشكل أسهل
-        </p>
-
-        <form id="register-form">
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-              الاسم
-            </label>
-            <input
-              type="text"
-              id="register-name"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-              البريد الإلكتروني *
-            </label>
-            <input
-              type="email"
-              id="register-email"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            class="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition"
-          >
-            تسجيل
-          </button>
-
-          <div class="text-center mt-4">
-            <a
-              href="#"
-              id="show-login"
-              class="text-blue-600 hover:underline text-sm"
-            >
-              عندك حساب؟ سجل دخولك الآن
-            </a>
-          </div>
-        </form>
-      </div>
-    </div>
 
     <script src="script.js"></script>
-
   </body>
 </html>

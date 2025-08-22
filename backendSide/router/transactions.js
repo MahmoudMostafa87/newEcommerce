@@ -3,14 +3,16 @@ const auth=require("../middleware/auth");
 const admin=require("../middleware/admin");
 const validationId=require("../middleware/validationId");
 const catchError=require("../utils/catchError");
+const bodyParser = require('body-parser');
+
 const {
-    captureOrder,
-    createOrder,
+    webhook,
+    confirmPayment,
     getAllTransactions,
     getMyTransactions,
     getSpcificTransaction,
     withdraw,
-    successPayMent
+    addPayment
 }=require("../controller/transactionsController");
 
 router.param("id",validationId);
@@ -19,10 +21,10 @@ router.use(auth);
 
 
 router.get("/",admin,catchError(getAllTransactions));
+router.post('/create-checkout-session',catchError(addPayment));
+router.post('/webhook',bodyParser.raw({type:'application/json'}),catchError(webhook));
+router.post('/confirm-payment',catchError(confirmPayment));
 router.get("/my-transaction",catchError(getMyTransactions));
-router.post("/create-order",catchError(createOrder));
-router.get("/success",catchError(successPayMent));
-router.post("/capture-order",catchError(captureOrder));////////////
 
 // app.get("/cancel", (req, res) => {
 //   res.send("تم إلغاء الدفع.");

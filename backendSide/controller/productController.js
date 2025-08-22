@@ -34,7 +34,7 @@ async function addProductController(req, res) {
 
     if (result.affectedRows === 0) return res.status(500).json({ message: code(500) });
 
-    res.status(201).redirect('/product');
+    res.status(201).redirect({ message: "تم حذف المنتج" });
 
 }
 
@@ -85,10 +85,12 @@ if(search) {
 
 
 async function getProductController(req, res) {
-        const {id}=req.params;
-        
-        const [result]=await db.execute("SELECT * FROM Product WHERE id = ?",[+id]);
 
+        const [result]=await db.execute(`SELECT P.stock,P.price,P.description,P.name,C.name "Categoryname",
+            P.image_url ,P.id
+            FROM Product P JOIN Category C
+            ON C.id=P.category_id
+            WHERE P.id = ?`,[+req.params.id]);
         if(result.length===0)return res.status(404).json({message:"not found this product"})
 
         return res.status(200).json(result[0]);

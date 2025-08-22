@@ -57,7 +57,7 @@ async function updateMyprofile(req,res){
         SELECT * FROM Users
         WHERE id=?`,
         [req.user.id]);
-    
+        
     if(req.file){
         image_url=req.protocol+"://"+req.header("host")+"/"+req.file.path;
         deleteFile(result[0].image_url.split("\\")[1]);
@@ -139,15 +139,13 @@ async function updatePassword(req,res){
 
 async function deleteSpcificProfile(req,res){
  
-    const [result]=await db.query(`SELECT * FROM Users WHERE id=?`,[+req.params.id]);
     const [[MyProfile]]=await db.query(`SELECT * FROM Users WHERE id=?`,[req.user.id]);
-    if(result.length===0)return res.status(404).send("not found this user");
+    if(!MyProfile||MyProfile=={})return res.status(404).send("not found this user");
     
-    if(MyProfile.id===result[0].id)return res.status(409).send("you can\'t delete yourself");
-    if(result[0].image_url)
-        deleteFile(result[0].image_url.split("\\")[1]);
+    if(MyProfile.image_url)
+        deleteFile(MyProfile.image_url.split("\\")[1]);
 
-    await db.execute("DELETE FROM Users WHERE id=?",[+req.params.id]);
+    await db.execute("DELETE FROM Users WHERE id=?",[req.user.id]);
 
     res.status(200).json({message:"delete user Successfuly"})
 };

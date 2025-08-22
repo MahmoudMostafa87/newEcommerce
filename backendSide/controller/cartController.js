@@ -104,7 +104,7 @@ async function getProductsInCard(req,res){
 
 //will return server internal error because system database
   const [result]=await db.query(`
-    SELECT Product.name,Product.price,Product.image_url,Cart_item.quantity
+    SELECT Cart.id,Cart_item.product_id,Product.name,Product.price,Product.image_url,Cart_item.quantity
     FROM Cart_item
     JOIN Cart ON Cart.id=Cart_item.cart_id
     JOIN Product ON Product.id=Cart_item.product_id

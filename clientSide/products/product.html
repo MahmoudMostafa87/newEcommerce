@@ -33,8 +33,12 @@
             id="main-nav"
             class="hidden md:flex items-center space-x-4 space-x-reverse text-sm text-gray-800 relative flex-col md:flex-row bg-white md:bg-transparent absolute md:static top-20 right-4 md:right-0 border md:border-0 p-4 md:p-0 shadow-md md:shadow-none z-50 rounded-md md:rounded-none w-60 md:w-auto"
           >
-            <a href="indexx.html" class="hover:text-blue-600 font-bold"
+            <a href="../indexx.html" class="hover:text-blue-600 font-bold"
               >الرئيسية</a
+            >
+            
+          <a href="../profile/index.html" class="hover:text-blue-600 font-bold"
+              >صفحه الشخصية</a
             >
 
             <!-- 🔽 Dropdown بالضغط -->
@@ -47,87 +51,7 @@
               </button>
               <div
                 id="dropdown-menu"
-                class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-md rounded-md hidden z-50"
-              >
-                <ul class="text-sm text-right p-2 space-y-1">
-                  <li>
-                    <a
-                      href="products/index.html"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >تجارة وأعمال</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >روايات وقصص</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >تعليم وأطفال</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >اشتراكات</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >طبخ</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >ألعاب وترفيه</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >صحة ورياضة</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >خدمات</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >مجانية</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >قوالب</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="block px-3 py-1 hover:bg-gray-100 rounded"
-                      >رمضان</a
-                    >
-                  </li>
-                </ul>
+                class="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-md rounded-md hidden z-50">
               </div>
             </div>
 
@@ -161,30 +85,8 @@
       </div>
     </header>
 
-    <main class="p-4">
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded shadow p-6"
-      >
-        <!-- صورة المنتج -->
-        <img
-          src="../images/fotis-fotopoulos-DuHKoV44prg-unsplash.jpg"
-          alt="Product Image object-cover"
-          class="w-full rounded"
-        />
-
-        <!-- تفاصيل المنتج -->
-        <div class="space-y-4">
-          <h1 class="text-2xl font-bold">اسم المنتج</h1>
-          <p class="text-green-600 text-xl">السعر: 3000 جنيه</p>
-          <p class="text-red-500">الخصم: 15%</p>
-          <p class="text-gray-600">عدد المشاهدات: 350</p>
-          <button
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            أضف إلى السلة
-          </button>
-        </div>
-      </div>
+    <!-- content product -->
+    <main id="product-details" class="p-4">
     </main>
 
     <!-- هنا الفوتر -->
@@ -315,141 +217,49 @@
         </div>
       </div>
     </footer>
-    <!-- Login Modal -->
+      <script src="../script.js"></script>
+
+  <script>
+  
+  const id=localStorage.getItem("id");
+
+    const container = document.getElementById("product-details");
+  
+  fetch(`http://127.0.0.1:4000/product/${id}`,{
+    method:"GET",
+    credentials:"include"
+  })
+  .then((response) => response.json())
+  .then((product) => {
+    container.innerHTML = `
     <div
-      id="login-modal"
-      class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center"
-    >
-      <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold">تسجيل الدخول</h2>
-          <button
-            id="close-login-modal"
-            class="text-gray-500 hover:text-gray-700 text-2xl"
-          >
-            &times;
-          </button>
-        </div>
-
-        <p class="text-gray-600 mb-6 text-center">
-          مرحباً بعودتك، عند إدخال بريدك الإلكتروني ستصلك رسالة تحتوي على رابط
-          الدخول لحسابك
-        </p>
-
-        <form id="login-form">
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-              بريدك الإلكتروني *
-            </label>
-            <input
-              type="email"
-              id="login-email"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            class="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition"
-          >
-            إرسال رابط الدخول
-          </button>
-
-          <div class="text-center mt-4">
-            <a
-              href="#"
-              id="show-register"
-              class="text-blue-600 hover:underline text-sm"
-            >
-              للتسجيل اضغط هنا
-            </a>
-          </div>
-        </form>
-      </div>
+        class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded shadow p-6"
+      >
+    
+      <img src="${product.image_url}" 
+      alt="${product.name}"
+      class="w-full rounded">
+    
+    <div class="space-y-4">
+    <h1 class="text-2xl font-bold">${product.name}</h1>
+    <p class="text-green-600 text-xl">${product.price}</p>
+    <button onclick="addToCart(${product.id})" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+    أضف إلى السلة
+    </button>
+    <button onclick="saved_product(${product.id})" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+    حفظ المنتج
+    </button>
     </div>
-
-    <!-- Register Modal -->
-    <div
-      id="register-modal"
-      class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center"
-    >
-      <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold">تسجيل</h2>
-          <button
-            id="close-register-modal"
-            class="text-gray-500 hover:text-gray-700 text-2xl"
-          >
-            &times;
-          </button>
-        </div>
-
-        <p class="text-gray-600 mb-6 text-center">
-          سجل معنا الآن لشراء المنتجات بشكل أسهل
-        </p>
-
-        <form id="register-form">
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-              الاسم
-            </label>
-            <input
-              type="text"
-              id="register-name"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-              البريد الإلكتروني *
-            </label>
-            <input
-              type="email"
-              id="register-email"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            class="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition"
-          >
-            تسجيل
-          </button>
-
-          <div class="text-center mt-4">
-            <a
-              href="#"
-              id="show-login"
-              class="text-blue-600 hover:underline text-sm"
-            >
-              عندك حساب؟ سجل دخولك الآن
-            </a>
-          </div>
-        </form>
-      </div>
     </div>
-    <script src="script.js"></script>
-    <script src="../script.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const dropdownBtn = document.getElementById("dropdown-toggle");
-        const dropdownMenu = document.getElementById("dropdown-menu");
-
-        dropdownBtn.addEventListener("click", function (e) {
-          e.stopPropagation(); // منع إغلاق القائمة فورًا
-          dropdownMenu.classList.toggle("hidden");
-        });
-
-        // إغلاق القائمة لو المستخدم ضغط خارجها
-        document.addEventListener("click", function () {
-          dropdownMenu.classList.add("hidden");
-        });
-      });
+    `;
+    // addToCart this function must call it from file new script js
+  })
+  .catch((err) => {
+    container.innerHTML = `<p class='text-red-500'>لم يتم العثور على المنتج.</p>`;
+    console.error(err);
+  });
     </script>
+      <script src="script.js"></script>
+
   </body>
 </html>

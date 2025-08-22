@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style/signin.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="form-container">
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">البريد الإلكتروني</label>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" name="email" id="login-email" class="form-control" placeholder="أدخل بريدك الإلكتروني" required>
+                    <div class="error-message" id="login-email-error">البريد الإلكتروني غير صحيح</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">كلمة المرور</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" name="password" id="login-password" class="form-control" placeholder="أدخل كلمة المرور" required>
+                    <i class="fas fa-eye password-toggle" id="login-toggle-password"></i>
+                    <div class="error-message" id="login-password-error">كلمة المرور يجب أن تكون على الأقل 6 أحرف</div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <input type="checkbox" id="remember-me">
+                            <label for="remember-me" class="mr-2">تذكرني</label>
+                        </div>
+                        <a href="#" class="text-sm text-primary">نسيت كلمة المرور؟</a>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">تسجيل الدخول</button>
+                
+                <div class="form-footer">
+                    ليس لديك حساب؟ <a href="./signup.html" class="text-primary">سجل الآن</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+
+            // إظهار/إخفاء كلمة المرور
+            function setupPasswordToggle(toggleId, inputId) {
+                const toggle = document.getElementById(toggleId);
+                const input = document.getElementById(inputId);
+                
+                toggle.addEventListener('click', function() {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        toggle.classList.remove('fa-eye');
+                        toggle.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        toggle.classList.remove('fa-eye-slash');
+                        toggle.classList.add('fa-eye');
+                    }
+                });
+            }
+            
+            setupPasswordToggle('login-toggle-password', 'login-password');
+
+            // تحقق من صحة النموذج
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            function showError(elementId, message) {
+                const element = document.getElementById(elementId);
+                element.textContent = message;
+                element.style.display = 'block';
+                return false;
+            }
+            
+            function hideError(elementId) {
+                const element = document.getElementById(elementId);
+                element.style.display = 'none';
+                return true;
+            }
+
+            // تحقق من نموذج تسجيل الدخول
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // تحقق من البريد الإلكتروني
+                const email = document.getElementById('login-email').value.trim();
+                if (!email) {
+                    isValid = showError('login-email-error', 'يرجى إدخال البريد الإلكتروني');
+                } else if (!validateEmail(email)) {
+                    isValid = showError('login-email-error', 'البريد الإلكتروني غير صحيح');
+                } else {
+                    hideError('login-email-error');
+                }
+
+                // تحقق من كلمة المرور
+                const password = document.getElementById('login-password').value.trim();
+                if (!password) {
+                    isValid = showError('login-password-error', 'يرجى إدخال كلمة المرور');
+                } else if (password.length < 6) {
+                    isValid = showError('login-password-error', 'كلمة المرور يجب أن تكون على الأقل 6 أحرف');
+                } else {
+                    hideError('login-password-error');
+                }
+
+                if (isValid) {
+
+                    const password=document.getElementById("login-password").value;
+                    const email=document.getElementById("login-email").value;
+
+                    const res=await fetch("http://127.0.0.1:4000/signin",{
+                        method:"POST",
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        credentials: "include",
+                        body:JSON.stringify({password,email})
+                    });
+                    if(res.ok){
+                        alert('تم تسجيل الدخول بنجاح!');
+                        location.href="../indexx.html";
+                    }
+                    else{
+                        const message=await res.json();
+                        alert(message.message);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+<!-- aksjdbascas@gmail.com
+ alkdnasldas -->

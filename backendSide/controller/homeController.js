@@ -44,8 +44,7 @@ async function SignIN(req,res){
         httpOnly:true,
         maxAge: 24 * 60 * 60 * 1000 * 30 ,//30d
         secure: false,
-        sameSite:"lax",
-        path:"/"
+        sameSite:"lax"
     });
     res.status(200).json({
         message:message(200),
@@ -59,7 +58,6 @@ async function SignIN(req,res){
 }
 
 async function SignUp(req,res){
-
     const {name,email,password,phone_number}=req.body;
     
     const {error}=signUp(req.body);
@@ -97,8 +95,7 @@ async function SignUp(req,res){
         httpOnly:true,
         maxAge: 24 * 60 * 60 * 1000 * 30 ,//30d
         secure: false,
-        sameSite:"lax",
-        path:"/"
+        sameSite:"lax"
     });
 
     res.status(201).json({message:message(201),/*token,*/userId:id});

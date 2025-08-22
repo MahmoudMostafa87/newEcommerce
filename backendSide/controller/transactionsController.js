@@ -1,59 +1,14 @@
-const {
-    // client, // هذا هو PayPalHttpClient المهيأ
-    // generateAccessToken,
-    // OrdersCreateRequest, // نستورد دالة البناء مباشرة
-    // OrdersCaptureRequest // نستورد دالة البناء مباشرة
-} = require("../utils/paymentMethod");
+const stripe= require('stripe')(process.env.SECURTY_KEY);
 const db=require("../module/db");
 const axios = require('axios');
+const logger = require('../startup/logging');
 
-
-
-// //الشغل الدفع وكل الpayment على api دة وتعديل الcard أنه is_paid فى الapi ألى بعده
-// //لو اكدنا الدفع هيروح id الدفع للfrontend عشان يرجعه تاني واكد عمليه الدفع
-// async function confirmCard(req,res){
-//   const {country,postcode,address,phoneNumber}=req.body;
-
-//   const {error} =validationConfirm(req.body);
-  
-//   if(error)return res.status(400).json({message:error.details[0].message})
-//   let [result]=await db.query(`SELECT * FROM Cart WHERE user_id=? AND state_card="pending";`,[req.user.id]);
-  
-//   if(result.length===0)return res.status(404).json({message:"not found this card"});
-//   const card=result[0];
-  
-//   [result]=await db.query(`SELECT SUM(Product.price*Cart_item.quantity) AS TotalPrice FROM Product 
-//     JOIN Cart_item ON Cart_item.product_id=Product.id
-//     JOIN Cart ON Cart.id=Cart_item.cart_id
-//     AND Cart.user_id=?
-//     `,[req.user.id]);
+//بعدها اعمل الwebhook
+//وظبط الصفحات الfront
+async function addPayment(req, res){
+  const {cardId}=req.body;
 
   
-  
-//   await db.query(`INSERT INTO  Orders(
-//     totalPrice,
-//     phoneNumber,
-//     address,
-//     postcode,
-//     country,
-//     user_id) VALUES (?,?,?,?,?,?) `,[result[0].TotalPrice,phoneNumber,address,postcode,country,req.user.id]);
-    
-//     await db.query(`DELETE FROM Cart_item WHERE cart_id=?;
-//       UPDATE Cart SET state_card="completed" WHERE user_id= ?;
-//       `,[card.id,req.user.id]);
-
-
-//   res.status(200).json({message:"done create order"});
-//   };
-
-
-//1 create order where is_paid false and it userid==req.user.id
-//2 get all 
-
-
-async function createOrder(req, res){
-//   const { cartId } = req.body;
-
   let [result]=await db.query(`SELECT * FROM Cart WHERE is_paid=0 AND user_id=?`,[req.user.id]);
 
   if(result.length===0)return res.status(404).send("not can found any items");
@@ -66,61 +21,56 @@ async function createOrder(req, res){
   `, [result[0].id]);
 
   if (cartItems.length === 0) return res.status(400).json({ message: "Cart is empty" });
- const accessToken = await generateAccessToken();
 
-  const response = await axios.post(
-    `${baseURL}/v2/checkout/orders`,
-    {
-      intent: "CAPTURE",
-      purchase_units: [
-        {
-          amount: {
-            currency_code: "USD",
-            value: cartItems[0].TotalPrice,
-          },
-        },
-      ],
-      application_context: {
-        return_url: "http://localhost:4000/transactions/success",
-        cancel_url: "http://localhost:4000/transactions/cancel",
-      },
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+    const [cardProductsForPayPal]=await db.query(`
+      SELECT CI.quantity,P.name,P.price FROM Cart_item CI 
+      JOIN Cart C ON C.id=CI.cart_id AND CI.card_id=?
+      JOIN Product P ON CI.product_id=P.id
+      WHERE C.user_id=? AND C.is_paid=0;`,[cardId,req.user.id]);
 
-  // const response = await client.execute(request);
-    const approvalUrl = response.data.links.find((link) => link.rel === "approve").href;
-    if (!approvalUrl) 
-        return res.status(500).json({ message: "Failed to get PayPal approval URL." });
-    
-  db.execute(`UPDATE Cart SET totalPrice=? WHERE id=?`,[cartItems[0].TotalPrice,result[0].id])
-    res.redirect(approvalUrl);
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: cardProductsForPayPal.map(item => ({
+      price_data: {
+        currency: 'sar',
+        product_data: { name: item.name },
+        unit_amount: item.price * 100,
+      },
+      quantity: item.quantity,
+    })),
+    mode: 'payment',
+    success_url: 'https://yourdomain.com/success',
+    cancel_url: 'https://yourdomain.com/cart',
+  });
+  
+  await db.execute(`UPDATE Cart SET totalPrice=? WHERE id=?`,[cartItems[0].TotalPrice,result[0].id])
+
+  res.status(200).json({ sessionId: session.id });
 };
 
 
+async function webhook(req,res){
+  const sig = req.headers['stripe-signature'];
+  const endpointSecret = 'WEBHOOK_SECRET_FROM_STRIPE'; // موجود في Stripe Dashboard
 
-async function successPayMent(req,res) {
-  const token = req.query.token;
-  const accessToken = await generateAccessToken();
+    let event;
 
-  const response = await axios.post(
-    `${baseURL}/v2/checkout/orders/${token}/capture`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  res.render("success", { details: response.data });
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    logger.error('❌ Webhook signature verification failed.', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
 }
+
+    if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+
+    console.log("✅ الدفع ناجح لجلسة: ", session.id);
+  }
+
+    res.status(200).json({message:'Received'});
+}
+
 
 //do loop on price and quantity for each product in cart to send balance for user but with reduce the commection *
 //do join between cart_item and card and product *
@@ -131,22 +81,11 @@ async function successPayMent(req,res) {
 //commision_rate in data base is discount on product *
 // price * (1 - (commission rating / 100)) *
 
-async function captureOrder(req, res){
-  const {orderId,cartId} = req.body;
+async function confirmPayment(req, res){
+  const {cartId} = req.body;
 
 
-    // const [[{cartId}]]=await db.query(`SELECT max(id) as id FROM Cart WHERE user_id=?`,[req.user.id])
-
-    const request = new OrdersCaptureRequest(orderId);
-    request.requestBody({});
-    console.log(request);
-    const capture = await client.execute(request);
-    const captureStatus = capture.result.status;
-
-  if (captureStatus !== "COMPLETED") {
-    return res.status(400).json({ message: "Payment not completed" });
-  }
-
+    
   const [cartItems] = await db.query(`
     SELECT 
     ci.quantity * p.price AS amount ,
@@ -179,7 +118,7 @@ async function captureOrder(req, res){
   
     await db.query(`
     INSERT INTO Transactions (user_id, cart_id, type, amount, currency, status, paypal_order_id)
-    VALUES (?, ?, 'PAYMENT', ?, 'USD', 'COMPLETED', ?)
+    VALUES (?, ?, 'PAYMENT', ?, 'sar', 'COMPLETED', ?)
   `, [req.user.id, cartId, card[0].totalPrice, orderId]);
 
   res.status(200).json({ message: "Payment captured and sellers credited" });
@@ -223,23 +162,16 @@ async function getSpcificTransaction(req,res){
 
 
 async function getMyTransactions(req,res){
-const {pagesize=12,page=1,type}=req.query;
+const {pagesize=12,page=1}=req.query;
     const limit=(page-1)*pagesize;
     let result;
-
-    if(type){
-        [result]=await db.query(`SELECT * FROM Transactions
-            WHERE type = ? AND user_id=?
-            ORDER BY id
-            LIMIT ? OFFSET ? `,[type,req.user.id,+pagesize,+limit]);
     
-    }else{
-        [result]=await db.query(`SELECT * FROM Transactions
+      [result]=await db.query(`SELECT description,amount,created_at FROM Transactions
             WHERE user_id=?
             ORDER BY id
             LIMIT ? OFFSET ? `,[req.user.id,+pagesize,+limit]);
-        }
-    if(result.length===0)return res.status(404).json({message:"not found"});
+
+      if(result.length===0)return res.status(404).json({message:"not found"});
     
     res.status(200).json(result);
 }
@@ -319,10 +251,10 @@ module.exports={
     getAllTransactions,
     getMyTransactions,
     getSpcificTransaction,
-    captureOrder,
-    createOrder,
     withdraw,
-    successPayMent
+    addPayment,
+    confirmPayment,
+    webhook
 }
 
 

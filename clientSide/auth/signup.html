@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="./style/signup.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="form-container">
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-name">الاسم الكامل</label>
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="register-name" name="name" class="form-control" placeholder="أدخل اسمك الكامل" required>
+                    <div class="error-message" id="name-error">الاسم يجب أن يكون على الأقل 3 أحرف</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-email">البريد الإلكتروني</label>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="register-email" name="email" class="form-control" placeholder="أدخل بريدك الإلكتروني" required>
+                    <div class="error-message" id="email-error">البريد الإلكتروني غير صحيح</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-password">كلمة المرور</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="register-password" name="password" class="form-control" placeholder="أنشئ كلمة مرور قوية" required>
+                    <i class="fas fa-eye password-toggle" id="toggle-password"></i>
+                    <div class="error-message" id="password-error">كلمة المرور يجب أن تكون على الأقل 6 أحرف</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone_number">رقم التلفون</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="text" id="phone_number" name="phone_number" class="form-control" placeholder="ادخل رقم الهاتف" required>
+                    <div class="error-message" id="confirm-error">رقم الهاتف غير صحيح</div>
+                </div>
+                
+                <div class="form-group">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">أوافق على <a href="#" class="text-primary">الشروط والأحكام</a></label>
+                    <div class="error-message" id="terms-error">يجب الموافقة على الشروط والأحكام</div>
+                </div>
+                
+                <button type="submit" class="btn">إنشاء حساب</button>
+                
+                <div class="form-footer">
+                    لديك حساب بالفعل؟ <a href="./login.html" class="text-primary">سجل الدخول</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('register-form');
+
+            // Setup password toggle
+            function setupPasswordToggle(toggleId, inputId) {
+                const toggle = document.getElementById(toggleId);
+                const input = document.getElementById(inputId);
+                
+                toggle.addEventListener('click', function() {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        toggle.classList.remove('fa-eye');
+                        toggle.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        toggle.classList.remove('fa-eye-slash');
+                        toggle.classList.add('fa-eye');
+                    }
+                });
+            }
+            
+            setupPasswordToggle('toggle-password', 'register-password');
+
+            // Validation functions
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            function showError(elementId, message) {
+                const element = document.getElementById(elementId);
+                element.textContent = message;
+                element.style.display = 'block';
+                return false;
+            }
+            
+            function hideError(elementId) {
+                const element = document.getElementById(elementId);
+                element.style.display = 'none';
+                return true;
+            }
+
+            // Form validation
+            registerForm.addEventListener('submit',async function(e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // Validate name
+                const name = document.getElementById('register-name').value.trim();
+                if (!name) {
+                    isValid = showError('name-error', 'يرجى إدخال الاسم');
+                } else if (name.length < 3) {
+                    isValid = showError('name-error', 'الاسم يجب أن يكون على الأقل 3 أحرف');
+                } else {
+                    hideError('name-error');
+                }
+
+                // Validate email
+                const email = document.getElementById('register-email').value.trim();
+                if (!email) {
+                    isValid = showError('email-error', 'يرجى إدخال البريد الإلكتروني');
+                } else if (!validateEmail(email)) {
+                    isValid = showError('email-error', 'البريد الإلكتروني غير صحيح');
+                } else {
+                    hideError('email-error');
+                }
+
+                // Validate password
+                const password = document.getElementById('register-password').value.trim();
+                if (!password) {
+                    isValid = showError('password-error', 'يرجى إدخال كلمة المرور');
+                } else if (password.length < 6) {
+                    isValid = showError('password-error', 'كلمة المرور يجب أن تكون على الأقل 6 أحرف');
+                } else {
+                    hideError('password-error');
+                }
+
+                // Validate password confirmation
+                const phone_number = document.getElementById('phone_number').value.trim();
+                if (!phone_number) {
+                    isValid = showError('confirm-error', 'قم باضافة رقم الهاتف ارجوك');
+                } else {
+                    hideError('confirm-error');
+                }
+
+                // Validate terms checkbox
+                const terms = document.getElementById('terms').checked;
+                if (!terms) {
+                    isValid = showError('terms-error', 'يجب الموافقة على الشروط والأحكام');
+                } else {
+                    hideError('terms-error');
+                }
+
+                if (isValid) {
+                    const body = {
+                        name: document.getElementById('register-name').value,
+                        email: document.getElementById('register-email').value,
+                        password: document.getElementById('register-password').value,
+                        phone_number: document.getElementById('phone_number').value
+                    };
+                    
+                    const res=await fetch("http://127.0.0.1:4000/signup",{
+                        method:"POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        credentials: "include",
+                        body:JSON.stringify(body)
+                    });
+
+                    if(res.ok){
+                        alert('تم تسجيل الدخول بنجاح!');
+                        location.href="../indexx.html";
+                    }
+                    else{
+                        const message=await res.json();
+                        alert(message.message);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

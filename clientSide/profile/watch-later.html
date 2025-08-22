@@ -1,68 +1,19 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>المفضلة </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/all.css">
-  <link rel="stylesheet" href="css/style.css">
+  <head>
+    <meta charset="UTF-8">
+    <title>المفضلة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/all.css">
+    <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-br from-indigo-100 to-white min-h-screen flex items-center justify-center">
   <div class="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 border border-indigo-100 mt-10">
-    <h2 class="text-2xl font-bold mb-8 text-indigo-700 flex items-center gap-3 justify-center">
-      المفضله
-    </h2>
+    <h2 class="text-2xl font-bold mb-8 text-indigo-700 text-center">المفضلة</h2>
     <div id="watch-later-list" class="space-y-4"></div>
   </div>
-  <script>
-    async function getProductSavedIt() {
-      const res=await fetch("http://localhost:4000/saved_product",
-        {
-            method:"GET",
-            headers:{
-              "Content-Type":"application/json"
-            },
-            credentials:"include"
-          }
-      );
 
-      if(!res.ok) throw new Error(`code : ${res.status}, message : ${res.statusText}`);
-
-      products=await res.json();
-      
-      return products;
-    
-    }
-
-    async function renderWatchLater() {
-      const watchLater=await getProductSavedIt();
-
-      const container = document.getElementById('watch-later-list');
-      container.innerHTML = watchLater.map((product) => `
-        <div class="flex items-center gap-4 bg-indigo-50 rounded-lg border p-4">
-          <img src="${product.image_url}" alt="${product.name}" class="w-20 h-20 rounded shadow border object-cover">
-          <div class="flex-1">
-            <div class="font-bold text-gray-800 text-lg">${product.name}</div>
-            <div class="text-gray-600 mt-1">السعر: <span class="font-semibold">${product.price} ج.م</span></div>
-          </div>
-          <button onclick="removeWatchLater(${product.id})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">حذف</button>
-        </div>
-      `).join('');
-    }
-    async function removeWatchLater(id) {
-        await fetch(`http://localhost:4000/saved_product/${id}`,
-          {
-            method:"DELETE",
-            headers:{
-              "Content-Type":"application/json"
-            },
-            credentials:"include"
-          }
-        );
-        renderWatchLater();
-    }
-    renderWatchLater();
-  </script>
+  <script src="./js/script.js"></script>
 </body>
 </html>

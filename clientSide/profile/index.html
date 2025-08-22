@@ -10,117 +10,105 @@
 </head>
 <body class="bg-gradient-to-br from-indigo-100 to-white min-h-screen flex items-center justify-center">
   <div class="w-full min-h-screen flex flex-col md:flex-row gap-8 items-start justify-center py-10 px-2 md:px-10">
-    <aside class="bg-white rounded-2xl shadow-lg p-6 w-full md:w-1/4 mb-6 md:mb-0 border border-indigo-100">
-      <h3 class="text-xl font-bold mb-6 text-indigo-700 flex items-center gap-2">
-        <i class="fas fa-user-cog text-indigo-500"></i>
-        إعدادات الملف الشخصي
-      </h3>
-      <ul class="space-y-4 text-right">
-        <li>
-          <a href="index.html">
-            <h4 class="text-sm text-white bg-indigo-600 cursor-pointer rounded px-3 py-2 font-bold flex items-center gap-2">
-              <i class="fas fa-id-card text-white"></i>
-              معلومات الحساب
-            </h4>
-          </a>
-        </li>
-        <li>
-          <a href="profile update.html"
-            class="block text-sm text-gray-700 hover:bg-indigo-50 cursor-pointer rounded px-3 py-2 font-normal flex items-center gap-2 transition">
-            <i class="fas fa-sync-alt text-indigo-500"></i>
-            تحديث الملف
-          </a>
-        </li>
-        <li>
-          <h4 class="text-sm text-gray-700 hover:bg-indigo-50 cursor-pointer rounded px-3 py-2 font-normal flex items-center gap-2 transition">
-            <i class="fas fa-map-marker-alt text-indigo-500"></i>
-            الموقع
-          </h4>
-        </li>
-        <li>
-          <h4 id="go-to-address"
+  <aside class="bg-white rounded-lg shadow-md p-6 w-full md:w-1/4 mb-6 md:mb-0">
+    <h3 class="text-xl font-bold mb-4 text-gray-800">إعدادات الملف الشخصي</h3>
+    <ul class="space-y-5 text-right">
+
+  <li>
+  <a href="./index.html"
+    class="block text-sm text-gray-700  cursor-pointer rounded px-2 py-1 font-normal flex items-center gap-2">
+    <i class="fas fa-sync-alt text-gray-500"></i>
+    معلومات الحساب
+  </a>
+</li>
+  <li>
+    <a href="./profile update.html">
+      <h4 class="text-sm text-white bg-indigo-600 cursor-pointer rounded px-3 py-2 font-bold flex items-center gap-2">
+        <i class="fas fa-id-card text-white"></i>
+        تحديث الملف
+      </h4>
+    </a>
+  </li>
+<li>
+  <a href="./address-details.html">
+
+    <h4 id="transitions"
+    class="text-sm text-gray-700 hover:bg-gray-300 cursor-pointer rounded px-2 py-1 font-normal flex items-center gap-2">
+    <i class="fas fa-home text-gray-500"></i>
+    التحويلات
+  </h4>
+</a>
+</li>
+      <li>
+        <a href="./منتجاتي.html">
+          <h4
             class="text-sm text-gray-700 hover:bg-indigo-50 cursor-pointer rounded px-3 py-2 font-normal flex items-center gap-2 transition">
-            <i class="fas fa-home text-indigo-500"></i>
-            عنوان التسليم
+            <i class="fas fa-box-open text-gray-500"></i>
+            منتجاتي
           </h4>
-        </li>
-        <li>
-          <h4 class="text-sm text-gray-700 hover:bg-indigo-50 cursor-pointer rounded px-3 py-2 font-normal flex items-center gap-2 transition">
-            <i class="fas fa-share-alt text-indigo-500"></i>
-            وسائل التواصل الاجتماعي
-          </h4>
-        </li>
-          <li>
-            <a href="منتجاتي.html">
-              <h4
-                class="text-sm text-gray-700 hover:bg-indigo-50 cursor-pointer rounded px-3 py-2 font-normal flex items-center gap-2 transition">
-                <i class="fas fa-box-open text-indigo-500"></i>
-                منتجاتي
-              </h4>
-            </a>
-          </li>
-          <li>
-            <a href="watch-later.html">
-              <h4
-                class="text-sm text-gray-700 hover:bg-indigo-50 cursor-pointer rounded px-3 py-2 font-normal flex items-center gap-2 transition">
-                <i class="fas fa-clock text-indigo-500"></i>
-              المفضله
-              </h4>
-            </a>
-          </li>
-        <li>
-          <h4 id="go-to-password"
-            class="text-sm text-gray-700 hover:bg-indigo-50 cursor-pointer rounded px-3 py-2 font-normal flex items-center gap-2 transition">
-            <i class="fas fa-key text-indigo-500"></i>
-            تغيير كلمة المرور
-          </h4>
-        </li>
-        <li>
-          <h4 class="text-sm text-red-600 hover:bg-red-50 cursor-pointer rounded px-3 py-2 font-normal flex items-center gap-2 transition">
-            <i class="fas fa-trash-alt text-red-500"></i>
-            حذف الحساب
-          </h4>
-        </li>
-      </ul>
-    </aside>
+        </a>
+      </li>
+      <li>
+  <a href="./watch-later.html">
+    <h4 class="text-sm text-gray-700 hover:bg-indigo-50 cursor-pointer rounded px-3 py-2 font-normal flex items-center gap-2 transition">
+      <i class="fas fa-clock text-gray-500"></i>
+      المفضله
+    </h4>
+  </a>
+</li>
+<li>
+<a href="./password.html">
+  <h4 id="go-to-password"
+    class="text-sm text-gray-700 hover:bg-gray-300 cursor-pointer rounded px-2 py-1 font-normal flex items-center gap-2">
+    <i class="fas fa-key text-gray-500"></i>
+    تغيير كلمة المرور
+  </h4>
+</li>
+</a>
+<li>
+  <h4 id="delete-account"
+    class="text-sm text-red-600 hover:bg-gray-200 cursor-pointer rounded px-2 py-1 font-normal flex items-center gap-2">
+    <i class="fas fa-trash-alt text-red-500"></i>
+    حذف الحساب
+  </h4>
+</li>
+</ul>
+  </aside>
     <div class="md:w-2/3 w-full bg-white rounded-2xl shadow-lg p-10 border border-indigo-100 flex flex-col items-center">
       <h2 class="text-2xl font-bold mb-8 text-indigo-700 flex items-center gap-3 justify-center">
         <i class="fas fa-user text-indigo-500 text-2xl"></i>
         معلومات الحساب
       </h2>
-      <form class="w-full max-w-lg mx-auto">
-        <div class="flex flex-col items-center mb-8">
-          <div class="relative">
-            <img src="img/profile.jpg" alt="صورة الحساب"
-              class="w-24 h-24 rounded-full border-4 border-indigo-200 shadow mb-2 object-cover">
-          </div>
-        </div>
-        <div class="space-y-6">
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">البريد الإلكتروني</label>
-            <input type="email"
-              class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 text-base transition cursor-not-allowed" />
-          </div>
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">الاسم</label>
-            <input type="text"
-              class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 text-base transition cursor-not-allowed" />
-          </div>
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">رقم الهاتف</label>
-            <input type="number"
-              class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 text-base transition cursor-not-allowed" />
-          </div>
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">العنوان</label>
-            <input type="text"
-              class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 text-base transition cursor-not-allowed" />
-          </div>
-        </div>
-      </form>
+      
+       <div class="container mx-auto p-6">
+        <form class="w-full max-w-lg mx-auto" id="user-form">
+            
+              <div class="flex flex-col items-center mb-8">
+                <div id="image-profile" class="relative"></div>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">البريد الإلكتروني</label>
+                    <div id="email" class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 text-base transition cursor-not-allowed"></div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">الاسم</label>
+                    <div id="name" class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 text-base transition cursor-not-allowed"></div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">رقم الهاتف</label>
+                    <div id="phone_number" class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 text-base transition cursor-not-allowed"></div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">العنوان</label>
+                    <div id="address" class="block w-full rounded-lg bg-indigo-50 px-4 py-2 border border-indigo-200 text-base transition cursor-not-allowed"></div>
+                </div>
+         </div>
+            </form>
     </div>
   </div>
-  <script src="js/script.js"></script>
+  <script src="./js/script.js"></script>
+  <script src="../script.js"></script>
 </body>
 </html>
 

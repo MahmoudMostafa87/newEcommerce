@@ -6,9 +6,9 @@ const {SignIN,
 
 const catchError= require("../utils/catchError");
 
-router.get("/", (req, res) => {
-  res.render("index");
-});
+// router.get("/", (req, res) => {
+//   res.render("index");
+// });
 
 
 // router.get("/",catchError(getProduct));//*

@@ -16,24 +16,23 @@ const {
     updateProfileImage
 }=require("../controller/profileController");
 
-router.use(auth);
 router.param("id",validationId);
 
 
 router.route("/")
-.get(admin,catchError(getAllProfils))//*
-.put(upload.single("image"),catchError(updateMyprofile))//*
+.get(auth,admin,catchError(getAllProfils))//*
+.put(auth,upload.single("image"),catchError(updateMyprofile))//*
+.delete(auth,catchError(deleteSpcificProfile));//*
 
-router.get("/myProfile",catchError(getMyprofile));//*
-router.patch("/uploadImage",upload.single("image"),catchError(updateProfileImage));//*
-router.patch("/resetPassword",catchError(updatePassword));//*
+router.get("/myProfile",auth,catchError(getMyprofile));//*
+router.patch("/uploadImage",auth,upload.single("image"),catchError(updateProfileImage));//*
+router.patch("/resetPassword",auth,catchError(updatePassword));//*
 
 
 
 router.route("/:id")
-.get(admin,catchError(getSpcificProfile))//*
-.patch(admin,catchError(updatePermission))//*
-.delete(admin,catchError(deleteSpcificProfile));//*
+.get(auth,admin,catchError(getSpcificProfile))//*
+.patch(auth,admin,catchError(updatePermission));//*
 
 
 

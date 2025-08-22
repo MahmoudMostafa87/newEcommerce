@@ -21,7 +21,7 @@ const {addProductController,
     
     
 router.route('/')
-    .post(auth, admin,upload.single("image"), catchError(addProductController))//*
+    .post(auth,upload.single("image"), catchError(addProductController))//*
     .get(catchError(getAllProductsController));//*
     
 
@@ -32,7 +32,7 @@ router.get("/myProduct",auth,catchError(getMyProduct));//*
 router.route("/:id")
     .get(catchError(getProductController))//*
     .put(auth,admin,upload.single("image"),catchError(updateProductController))//*
-    .patch(auth,admin,catchError(updateThingInProductController))//*
+    .patch(auth,catchError(updateThingInProductController))//*
     .delete(auth,admin, catchError(deleteProductController));//*
 
 router.patch("/:id/update_image",auth,admin,upload.single("image"),catchError(updateImageProduct))//*
